@@ -19,7 +19,7 @@
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/back_icon"
+            android:src="@drawable/ic_back_24"
             android:layout_gravity="center"
             android:contentDescription="@string/back"
             />
@@ -61,7 +61,7 @@
             android:layout_weight="1"
             style="@style/default_text_style"
             android:text="@string/share"
-            app:drawableEndCompat="@drawable/share_icon" />
+            app:drawableEndCompat="@drawable/ic_share_24" />
     </LinearLayout>
 
     <LinearLayout
@@ -75,7 +75,7 @@
             android:layout_weight="1"
             style="@style/default_text_style"
             android:text="@string/support"
-            app:drawableEndCompat="@drawable/support_icon" />
+            app:drawableEndCompat="@drawable/ic_support_24" />
     </LinearLayout>
 
     <LinearLayout
@@ -89,7 +89,7 @@
             android:layout_weight="1"
             style="@style/default_text_style"
             android:text="@string/user_agreement"
-            app:drawableEndCompat="@drawable/arrow_icon" />
+            app:drawableEndCompat="@drawable/ic_back_arrow_24" />
     </LinearLayout>
 
 

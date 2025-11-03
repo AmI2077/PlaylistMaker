@@ -32,6 +32,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun onBackClick() {
-        startActivity(Intent(this@SettingsActivity, MainActivity::class.java))
+        finish()
     }
 }

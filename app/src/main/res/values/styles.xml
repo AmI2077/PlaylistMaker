@@ -19,7 +19,7 @@
     <style name="btn_style">
         <item name="backgroundTint">@color/white</item>
         <item name="cornerRadius">@dimen/btn_corner_radius_16</item>
-        <item name="android:textSize">@dimen/btn_corner_radius_16</item>
+        <item name="android:textSize">@dimen/text_size_22</item>
         <item name="android:textColor">@color/yp_black</item>
         <item name="iconGravity">textStart</item>
         <item name="iconTint">@color/yp_black</item>
