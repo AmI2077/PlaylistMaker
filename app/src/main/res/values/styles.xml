@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="default_text_style">
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="tablayout_style">
+        <item name="tabIndicatorColor">@color/yp_black</item>
+        <item name="tabTextColor">@color/yp_black</item>
+    </style>
+
+    <style name="header_text_style">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/yp_black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="btn_style">
+        <item name="backgroundTint">@color/white</item>
+        <item name="cornerRadius">@dimen/btn_corner_radius_16</item>
+        <item name="android:textSize">@dimen/text_size_22</item>
+        <item name="android:textColor">@color/yp_black</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconTint">@color/yp_black</item>
+        <item name="iconPadding">8dp</item>
+    </style>
+
+    <style name="linear_paddings">
+        <item name="android:paddingTop">21dp</item>
+        <item name="android:paddingBottom">21dp</item>
+    </style>
+</resources>
