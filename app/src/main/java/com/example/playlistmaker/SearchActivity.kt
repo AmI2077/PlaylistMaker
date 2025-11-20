@@ -35,7 +35,6 @@ class SearchActivity : AppCompatActivity() {
         }
         editText = findViewById<EditText>(R.id.search_bar)
         editText.setText(query)
-
         val clearSearchBtn = findViewById<ImageView>(R.id.clear_search_btn)
         editText.addTextChangedListener(setTextWatcher())
         clearSearchBtn.setOnClickListener { onClearBtnClick(editText) }
