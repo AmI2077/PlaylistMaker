@@ -4,12 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.setPadding
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val libraryBtn = findViewById<Button>(R.id.library_btn)
         val settingsBtn = findViewById<Button>(R.id.settings_btn)
 
-        searchBtn.setOnClickListener(object : View.OnClickListener{
+        searchBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 onSearchClick()
             }

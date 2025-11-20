@@ -13,16 +13,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        style="@style/header_text_style"
-        android:text="@string/search"/>
-
+        style="@style/headerTextStyle"
+        android:text="@string/library"/>
 
 <!-- Я не понимаю как у TabLayout убрать серую полоску под ней, похожую на тень -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/tablayout_style">
+        android:layout_height="wrap_content">
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

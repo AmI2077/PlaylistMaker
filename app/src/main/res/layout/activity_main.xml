@@ -6,24 +6,24 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/yp_blue"
     android:paddingStart="@dimen/padding_16"
     android:paddingEnd="@dimen/padding_16"
     android:paddingTop="14dp"
     android:paddingBottom="28dp"
+    android:theme="@style/Theme.PlaylistMaker.MainActivity"
     tools:context=".MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_title"
+        style="@style/headerTextStyle"
         android:paddingBottom="40dp"
-        android:textSize="@dimen/text_size_22"
         android:textColor="@color/white"
         />
     <Button
         android:id="@+id/search_btn"
-        style="@style/btn_style"
+        style="@style/btnStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
@@ -39,7 +39,7 @@
         android:layout_marginBottom="16dp"
         android:text="@string/library"
         app:icon="@drawable/ic_library_24"
-        style="@style/btn_style"/>
+        style="@style/btnStyle"/>
     <Button
         android:id="@+id/settings_btn"
         android:layout_width="match_parent"
@@ -47,6 +47,6 @@
         android:layout_weight="1"
         android:text="@string/settings"
         app:icon="@drawable/ic_settings_24"
-        style="@style/btn_style"/>
+        style="@style/btnStyle"/>
 
 </LinearLayout>

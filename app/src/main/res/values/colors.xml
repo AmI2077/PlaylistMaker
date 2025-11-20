@@ -5,4 +5,14 @@
     <color name="yp_blue">#3772E7</color>
     <color name="yp_black">#1A1B22</color>
     <color name="yp_light_gray">#E6E8EB</color>
+    <color name="yp_text_gray">#AEAFB4</color>
+
+    <color name="switch_track_checked">#76EAE0</color>
+    <color name="switch_track_unchecked">#E6E8EB</color>
+
+    <color name="switch_thumb_checked">#00D6C3</color>
+    <color name="switch_thumb_unchecked">#FF000000</color>
+
+    <color name="transparent">#00000000</color>
+
 </resources>

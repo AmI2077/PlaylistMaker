@@ -1,7 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:background">@color/yp_black</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabTextColor">@color/white</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+        <item name="android:textColorHint">@color/yp_black</item>
+        <item name="iconTint">@color/white</item>
+    </style>
+
+    <style name="Theme.PlaylistMaker.MainActivity" parent="Base.Theme.PlaylistMaker">
+        <item name="android:background">@color/yp_black</item>
+        <item name="android:textColor">@color/yp_black</item>
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabTextColor">@color/white</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+        <item name="android:textColorHint">@color/yp_black</item>
+        <item name="iconTint">@color/white</item>
     </style>
 </resources>
