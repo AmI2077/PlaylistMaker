@@ -12,16 +12,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 
 class SearchActivity : AppCompatActivity() {
 
     private var query: String = QUERY
     private lateinit var editText: EditText
-
-    companion object {
-        private const val USER_QUERY = "USER_QUERY"
-        private const val QUERY = ""
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +32,11 @@ class SearchActivity : AppCompatActivity() {
         }
         editText = findViewById<EditText>(R.id.search_bar)
         editText.setText(query)
+
         val clearSearchBtn = findViewById<ImageView>(R.id.clear_search_btn)
-        editText.addTextChangedListener(setTextWatcher())
         clearSearchBtn.setOnClickListener { onClearBtnClick(editText) }
+
+        setTextWatcher(editText)
 
         val backBtn = findViewById<ImageView>(R.id.back_btn)
         backBtn.setOnClickListener { onBackBtnClick() }
@@ -66,30 +65,14 @@ class SearchActivity : AppCompatActivity() {
         query = ""
     }
 
-    private fun setTextWatcher(): TextWatcher {
+    private fun setTextWatcher(editText: EditText) {
         val clearSearchBtn = findViewById<ImageView>(R.id.clear_search_btn)
-        return object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
+        editText.addTextChangedListener(
+            onTextChanged = { s, start, before, count ->
+                clearSearchBtn.visibility = setClearBtnVisibility(s)
+                query = s.toString()
             }
-
-            override fun beforeTextChanged(
-                p0: CharSequence?,
-                p1: Int,
-                p2: Int,
-                p3: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                p0: CharSequence?,
-                p1: Int,
-                p2: Int,
-                p3: Int
-            ) {
-                clearSearchBtn.visibility = setClearBtnVisibility(p0)
-                query = p0.toString()
-            }
-        }
+        )
     }
 
     private fun setClearBtnVisibility(s: CharSequence?): Int {
@@ -98,5 +81,10 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    companion object {
+        private const val USER_QUERY = "USER_QUERY"
+        private const val QUERY = ""
     }
 }

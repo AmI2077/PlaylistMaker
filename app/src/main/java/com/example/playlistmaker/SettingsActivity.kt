@@ -59,7 +59,7 @@ class SettingsActivity : AppCompatActivity() {
         val mailSubject = this.getString(R.string.email_subject)
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = "mailto:".toUri()
-        intent.putExtra(Intent.EXTRA_EMAIL, emailAddress)
+        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emailAddress))
         intent.putExtra(Intent.EXTRA_SUBJECT, mailSubject)
         intent.putExtra(Intent.EXTRA_TEXT, message)
         startActivity(intent)
