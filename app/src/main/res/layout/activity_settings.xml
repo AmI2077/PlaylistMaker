@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="24dp"
-        style="@style/linear_paddings">
+        style="@style/linearPaddings">
         <ImageView
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
@@ -27,10 +27,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
-            style="@style/header_text_style"
+            style="@style/headerTextStyle"
             android:text="@string/settings" />
     </LinearLayout>
 
+<!--    я не знаю, как сделать text и switch в одной кнопке поэтому оставил так-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,56 +42,43 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            style="@style/default_text_style"
+            style="@style/defaultTextStyle"
             android:text="@string/dark_theme"/>
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
+            app:trackTint="@color/switch_track_tint"
+            app:thumbTint="@color/switch_thumb_tint"
             />
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/shareBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="@style/linear_paddings">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/default_text_style"
-            android:text="@string/share"
-            app:drawableEndCompat="@drawable/ic_share_24" />
-    </LinearLayout>
+        android:text="@string/share"
+        android:drawableEnd="@drawable/ic_share_24"
+        style="@style/settingsBtnStyle"
+        />
 
-    <LinearLayout
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/supportBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="@style/linear_paddings">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/default_text_style"
-            android:text="@string/support"
-            app:drawableEndCompat="@drawable/ic_support_24" />
-    </LinearLayout>
+        android:text="@string/support"
+        android:drawableEnd="@drawable/ic_support_24"
+        style="@style/settingsBtnStyle"
+        />
 
-    <LinearLayout
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/agreementBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="@style/linear_paddings">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/default_text_style"
-            android:text="@string/user_agreement"
-            app:drawableEndCompat="@drawable/ic_back_arrow_24" />
-    </LinearLayout>
-
+        android:text="@string/user_agreement"
+        android:drawableEnd="@drawable/ic_back_arrow_24"
+        style="@style/settingsBtnStyle"
+        />
 
 </LinearLayout>

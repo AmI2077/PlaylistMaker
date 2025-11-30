@@ -11,4 +11,10 @@
     <string name="back">Назад</string>
     <string name="favourite_songs">Избранные треки</string>
     <string name="Playlists">Плейлисты</string>
+    <string name="android_dev_url">https://practicum.yandex.ru/profile/android-developer/</string>
+    <string name="user_agreement_url">https://yandex.ru/legal/practicum_offer/ru/</string>
+    <string name="email_address">prooo.01@mail.ru</string>
+    <string name="email_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="share_chooser_text">Выберите мессенджер</string>
 </resources>

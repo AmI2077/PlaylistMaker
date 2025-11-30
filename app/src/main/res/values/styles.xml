@@ -1,33 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="default_text_style">
+    <style name="defaultTextStyle" parent="Theme.MaterialComponents">
         <item name="android:textSize">@dimen/text_size_16</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
     </style>
 
-    <style name="tablayout_style">
-        <item name="tabIndicatorColor">@color/yp_black</item>
-        <item name="tabTextColor">@color/yp_black</item>
+    <style name="tabLayoutStyle">
+
     </style>
 
-    <style name="header_text_style">
-        <item name="android:textSize">22sp</item>
-        <item name="android:textColor">@color/yp_black</item>
-        <item name="android:textStyle">bold</item>
+    <style name="headerTextStyle" parent="Theme.MaterialComponents">
+        <item name="android:textSize">@dimen/text_size_22</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
     </style>
 
-    <style name="btn_style">
+    <style name="btnStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="backgroundTint">@color/white</item>
         <item name="cornerRadius">@dimen/btn_corner_radius_16</item>
         <item name="android:textSize">@dimen/text_size_22</item>
         <item name="android:textColor">@color/yp_black</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
         <item name="iconGravity">textStart</item>
         <item name="iconTint">@color/yp_black</item>
         <item name="iconPadding">8dp</item>
     </style>
 
-    <style name="linear_paddings">
+    <style name="settingsBtnStyle" parent="Base.Theme.PlaylistMaker">
+        <item name="cornerRadius">0dp</item>
+        <item name="backgroundTint">@color/transparent</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="iconGravity">textEnd</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:paddingTop">21dp</item>
         <item name="android:paddingBottom">21dp</item>
+
+    </style>
+
+    <style name="linearPaddings">
+        <item name="android:paddingTop">21dp</item>
+        <item name="android:paddingBottom">21dp</item>
+    </style>
+
+    <style name="editTextStyle">
+        <item name="android:background">@drawable/search_bg</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="maxLines">1</item>
+        <item name="android:inputType">text</item>
+        <item name="android:autofillHints"> </item>
+        <item name="fontFamily">@font/ys_display_regular</item>
     </style>
 </resources>
