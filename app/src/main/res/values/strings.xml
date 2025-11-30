@@ -17,4 +17,6 @@
     <string name="email_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="share_chooser_text">Выберите мессенджер</string>
+    <string name="placeholder">placeholder</string>
+    <string name="ic_circle">circle</string>
 </resources>

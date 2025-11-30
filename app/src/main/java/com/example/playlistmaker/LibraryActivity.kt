@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class LibraryActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -17,5 +18,6 @@ class LibraryActivity : AppCompatActivity() {
             v.setPadding(padding, systemBars.top, padding, systemBars.bottom)
             insets
         }
+
     }
 }
