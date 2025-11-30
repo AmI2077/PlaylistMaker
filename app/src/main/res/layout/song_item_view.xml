@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
@@ -28,6 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxLines="1"
             tools:text="Yesterday (Remastered 2009)" />
 
         <LinearLayout
@@ -37,11 +40,13 @@
 
             <TextView
                 android:id="@+id/artist_name"
-                style="artistNameTextStyle"
+                style="@style/artistNameTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="The Beatles"
-                android:textColor="@color/artist_and_duration_color" />
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/artist_and_duration_color"
+                tools:text="The Beatles" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -51,11 +56,11 @@
 
             <TextView
                 android:id="@+id/track_time"
-                style="artistNameTextStyle"
+                style="@style/artistNameTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="2:55"
-                android:textColor="@color/artist_and_duration_color" />
+                android:textColor="@color/artist_and_duration_color"
+                tools:text="2:55" />
         </LinearLayout>
     </LinearLayout>
 

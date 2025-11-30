@@ -64,8 +64,8 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
-    private fun getTracks(): ArrayList<Track> {
-        return arrayListOf(
+    private fun getTracks(): MutableList<Track> {
+        return mutableListOf(
             Track(
                 "Smells Like Teen Spirit",
                 "Nirvana",

@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.models.Track
 
 class SearchAdapter(
-    val tracks: ArrayList<Track>
+    val tracks: MutableList<Track>
 ) : RecyclerView.Adapter<SearchViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,

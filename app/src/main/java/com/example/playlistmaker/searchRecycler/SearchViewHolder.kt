@@ -1,5 +1,7 @@
 package com.example.playlistmaker.searchRecycler
 
+import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -31,7 +33,12 @@ class SearchViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
             .load(model.artworkUrl100)
             .placeholder(R.drawable.placeholder_45)
             .centerCrop()
-            .transform(RoundedCorners(10))
+            .transform(RoundedCorners(dpToPx(2f, itemView.context)))
             .into(imageView)
+    }
+
+    fun dpToPx(dp: Float, context: Context): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics).toInt()
     }
 }
