@@ -7,8 +7,10 @@
         <item name="fontFamily">@font/ys_display_regular</item>
     </style>
 
-    <style name="tabLayoutStyle">
-
+    <style name="artistNameTextStyle">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
     </style>
 
     <style name="headerTextStyle" parent="Theme.MaterialComponents">

@@ -15,4 +15,6 @@
 
     <color name="transparent">#00000000</color>
 
+    <color name="artist_and_duration_color">#AEAFB4</color>
+
 </resources>
