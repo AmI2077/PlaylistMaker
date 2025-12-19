@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.models.Track
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SearchRecyclerViewHolder(
     parent: ViewGroup,
@@ -27,7 +29,8 @@ class SearchRecyclerViewHolder(
     fun bind(model: Track) {
         trackNameView.text = model.trackName
         artistNameView.text = model.artistName
-        trackTimeView.text = model.trackTimeMillis
+        val duration = model.trackTimeMillis.toLong()
+        trackTimeView.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration)
         setImage(model.artworkUrl100)
     }
 
