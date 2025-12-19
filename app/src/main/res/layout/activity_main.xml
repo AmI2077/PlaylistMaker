@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/activity_main_bg"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/horizontalScreenPadding"
+    android:paddingVertical="@dimen/verticalScreenPadding"
+    tools:context=".ui.MainActivity">
+
+    <TextView
+        style="@style/headerTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/playlist_maker"
+        android:textColor="@color/white" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/search_btn"
+        style="@style/mainMenuBtnStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:text="@string/search"
+        app:icon="@drawable/ic_search_24" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/library_btn"
+        style="@style/mainMenuBtnStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:drawableStart="@drawable/ic_search_24"
+        android:text="@string/library"
+        app:icon="@drawable/ic_library_24" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/settings_btn"
+        style="@style/mainMenuBtnStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:drawableStart="@drawable/ic_search_24"
+        android:text="@string/settings"
+        app:icon="@drawable/ic_settings_24" />
+
+</LinearLayout>
