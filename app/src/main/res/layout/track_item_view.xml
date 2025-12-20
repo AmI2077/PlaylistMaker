@@ -27,6 +27,8 @@
             style="@style/regularTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             tools:text="Yesterday (Remastered 2009)" />
 
         <LinearLayout
@@ -41,6 +43,9 @@
                 style="@style/regularTextStyle.11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/colorOnSecondary"
+                android:ellipsize="end"
+                android:maxLines="1"
                 tools:text="The Beatles" />
 
             <ImageView
@@ -55,6 +60,7 @@
                 style="@style/regularTextStyle.11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/colorOnSecondary"
                 tools:text="2:55" />
         </LinearLayout>
 

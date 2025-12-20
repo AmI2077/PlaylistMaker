@@ -6,6 +6,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorHint">@color/yp_black</item>
         <item name="colorPrimary">@color/yp_black</item>
-
+        <item name="colorOnSecondary">@color/white</item>
     </style>
 </resources>
