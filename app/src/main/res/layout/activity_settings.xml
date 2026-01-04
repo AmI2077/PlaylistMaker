@@ -5,10 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/horizontalScreenPadding"
     android:paddingVertical="@dimen/verticalScreenPadding"
-    android:background="?attr/colorPrimary"
     tools:context=".ui.SettingsActivity">
 
     <LinearLayout
@@ -45,9 +45,13 @@
             android:layout_weight="1"
             android:text="@string/dark_theme" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/theme_switcher"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:checked="true"
+            app:thumbTint="@color/switch_thumb_colors"
+            app:trackTint="@color/switch_track_colors" />
     </LinearLayout>
 
     <LinearLayout
@@ -115,5 +119,4 @@
             android:contentDescription="@string/forward"
             android:src="@drawable/ic_forward_24" />
     </LinearLayout>
-
 </LinearLayout>
