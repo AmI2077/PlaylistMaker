@@ -1,4 +1,4 @@
-package com.example.playlistmaker.api
+package com.example.playlistmaker.data.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -12,5 +12,5 @@ object RetrofitClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val tracksApi = retrofit.create(TracksApiService::class.java)
+    val tracksApi: TracksApiService = retrofit.create(TracksApiService::class.java)
 }

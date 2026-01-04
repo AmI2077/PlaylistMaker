@@ -1,6 +1,8 @@
 package com.example.playlistmaker.ui
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -10,6 +12,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import androidx.core.net.toUri
+import com.example.playlistmaker.App
+import com.example.playlistmaker.data.preferences.ThemePreferences
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -17,16 +22,23 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var shareBtn: LinearLayout
     private lateinit var supportBtn: LinearLayout
     private lateinit var userAgreementBtn: LinearLayout
+    private lateinit var themeSwitcher: SwitchMaterial
+
+    private lateinit var themePreferences: ThemePreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
 
+        themePreferences = ThemePreferences(this)
+
         backBtn = findViewById<ImageView>(R.id.back_btn)
         shareBtn = findViewById<LinearLayout>(R.id.share_btn)
         supportBtn = findViewById<LinearLayout>(R.id.support_btn)
         userAgreementBtn = findViewById<LinearLayout>(R.id.agreement_btn)
+        themeSwitcher = findViewById<SwitchMaterial>(R.id.theme_switcher)
+        themeSwitcher.isChecked = setChecked()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -42,6 +54,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         setupClickListeners()
+        setChangeListener()
     }
 
     private fun setupClickListeners() {
@@ -49,6 +62,26 @@ class SettingsActivity : AppCompatActivity() {
         shareBtn.setOnClickListener { onShareBtnClick() }
         supportBtn.setOnClickListener { onSupportBtnClick() }
         userAgreementBtn.setOnClickListener { onUserAgreementBtnClick() }
+    }
+
+    private fun setChangeListener() {
+        themeSwitcher.setOnCheckedChangeListener { switcher, isChecked ->
+            (applicationContext as App).switchTheme(isChecked)
+        }
+    }
+
+    private fun setChecked(): Boolean {
+        return if (!themePreferences.getSharedPreferences().contains(ThemePreferences.ENABLED_DARK_THEME)) {
+            isDarkTheme(applicationContext)
+        } else {
+            themePreferences.isDarkTheme()
+        }
+    }
+
+    fun isDarkTheme(context: Context): Boolean {
+        val nightMode = context.resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK
+        return nightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
     private fun onShareBtnClick() {

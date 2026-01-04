@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/horizontalScreenPadding"
     android:paddingVertical="@dimen/verticalScreenPadding"
-    tools:context=".ui.SearchActivity">
+    tools:context=".ui.searchScreen.SearchActivity">
 
     <TextView
         style="@style/headerTextStyle"
@@ -46,7 +46,7 @@
             android:background="@drawable/search_bar_bg"
             android:hint="@string/search"
             android:imeOptions="actionDone"
-            android:singleLine="true"/>
+            android:singleLine="true" />
 
         <ImageView
             android:id="@+id/clear_search_btn"
@@ -65,28 +65,29 @@
         android:visibility="gone">
 
     </androidx.recyclerview.widget.RecyclerView>
+
     <LinearLayout
         android:id="@+id/empty_result_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="110dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="110dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:visibility="gone">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_empty_result_120"
             android:contentDescription="@string/empty_error"
-            />
+            android:src="@drawable/ic_empty_result_120" />
+
         <TextView
             style="@style/mediumTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/empty_error"
-            />
+            android:text="@string/empty_error" />
 
     </LinearLayout>
 
@@ -94,36 +95,83 @@
         android:id="@+id/network_error_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="110dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="110dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:visibility="gone">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_network_error_120"
             android:contentDescription="@string/network_error"
-            />
+            android:src="@drawable/ic_network_error_120" />
+
         <TextView
             style="@style/mediumTextStyle"
-            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/network_error"
-            />
+            android:gravity="center"
+            android:text="@string/network_error" />
+
         <Button
             android:id="@+id/refresh_btn"
             style="@style/defaultBtnStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/refresh"
-            />
+            android:text="@string/refresh" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/search_history_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
+        <TextView
+            style="@style/mediumTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:text="@string/history_message" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/history_search_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="32dp">
+
+            <Button
+                android:id="@+id/clear_history_btn"
+                style="@style/defaultBtnStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/clear_history" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/loading"
+        style="@style/mediumTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:text="@string/loading"
+        android:visibility="gone">
+    </TextView>
 </LinearLayout>

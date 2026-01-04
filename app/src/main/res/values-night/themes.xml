@@ -7,5 +7,7 @@
         <item name="android:textColorHint">@color/yp_black</item>
         <item name="colorPrimary">@color/yp_black</item>
         <item name="colorOnSecondary">@color/white</item>
+        <item name="colorButtonNormal">@color/white</item>
+        <item name="colorSecondaryVariant">@color/yp_black</item>
     </style>
 </resources>

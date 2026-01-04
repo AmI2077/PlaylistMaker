@@ -1,16 +1,18 @@
-package com.example.playlistmaker.api
+package com.example.playlistmaker.data.repository
 
-import com.example.playlistmaker.models.TracksResponse
+import com.example.playlistmaker.ui.searchScreen.state.SearchState
+import com.example.playlistmaker.data.api.TracksApiService
+import com.example.playlistmaker.data.models.TracksResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class TracksRepository(
     private val tracksApiService: TracksApiService,
-    private val callback: (SearchResult) -> Unit
+    private val callback: (SearchState) -> Unit
 ) {
-    fun search(query: String) {
-        tracksApiService.searchTracksByQuery(query).enqueue(object : Callback<TracksResponse>{
+     fun search(query: String) {
+        tracksApiService.searchTracksByQuery(query).enqueue(object : Callback<TracksResponse> {
             override fun onResponse(
                 call: Call<TracksResponse?>,
                 response: Response<TracksResponse?>
@@ -18,12 +20,12 @@ class TracksRepository(
                 if (response.isSuccessful) {
                     if(response.body()?.results?.isNotEmpty() == true) {
                         val tracks = response.body()?.results!!
-                        callback(SearchResult.Success(tracks))
+                        callback(SearchState.Success(tracks))
                     } else {
-                        callback(SearchResult.EmptyResult())
+                        callback(SearchState.EmptyResult)
                     }
                 } else {
-                    callback(SearchResult.Error(response.errorBody()?.string().toString()))
+                    callback(SearchState.Error(response.errorBody()?.string().toString()))
                 }
             }
 
@@ -32,10 +34,8 @@ class TracksRepository(
                 t: Throwable
             ) {
                 t.printStackTrace()
-                callback(SearchResult.NetworkError())
+                callback(SearchState.NetworkError)
             }
-
         })
     }
-
 }
