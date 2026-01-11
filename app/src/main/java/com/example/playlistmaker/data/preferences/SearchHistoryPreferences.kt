@@ -1,32 +1,34 @@
 package com.example.playlistmaker.data.preferences
 
 import android.content.Context
-import com.example.playlistmaker.data.models.Track
+import com.example.playlistmaker.data.model.Track
 import com.google.gson.Gson
 import androidx.core.content.edit
 
-class SearchHistoryPreferences(context: Context) {
+class SearchHistoryPreferences(context: Context) : TracksPreferences {
     private val sharedPreferences = context.getSharedPreferences(
         SEARCH_HISTORY_PREFERENCES, Context.MODE_PRIVATE
     )
 
-    fun read(): Array<Track> {
+    val jsonObj = Gson()
+
+    override fun read(): List<Track> {
         val json = sharedPreferences.getString(SEARCH_HISTORY, null)
         return if (json == null) {
-            arrayOf()
+            listOf()
         } else {
-            Gson().fromJson(json, Array<Track>::class.java)
+            jsonObj.fromJson(json, Array<Track>::class.java).toList()
         }
     }
 
-    fun write(tracks: Array<Track>) {
-        val json = Gson().toJson(tracks)
+    override fun write(tracks: List<Track>) {
+        val json = jsonObj.toJson(tracks)
         sharedPreferences.edit {
             putString(SEARCH_HISTORY, json)
         }
     }
 
-    fun clear() {
+    override fun clear() {
         sharedPreferences.edit { clear() }
     }
 

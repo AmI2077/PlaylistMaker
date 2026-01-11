@@ -6,12 +6,13 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doOnTextChanged
@@ -19,47 +20,31 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.models.Track
-import com.example.playlistmaker.data.preferences.SearchHistoryPreferences
-import com.example.playlistmaker.data.repository.SearchHistoryRepositoryImpl
-import com.example.playlistmaker.domain.SearchHistory
-import com.example.playlistmaker.ui.searchScreen.searchHistoryRecycler.SearchHistoryAdapter
-import com.example.playlistmaker.ui.searchScreen.searchRecycler.SearchAdapter
+import com.example.playlistmaker.data.model.Track
+import com.example.playlistmaker.ui.trackScreen.TrackActivity
+import com.example.playlistmaker.ui.searchScreen.tracksRecycler.TracksAdapter
 import com.example.playlistmaker.ui.searchScreen.state.SearchHistoryState
 import com.example.playlistmaker.ui.searchScreen.state.SearchScreenUiState
 import com.example.playlistmaker.ui.searchScreen.state.SearchState
 
 class SearchActivity : AppCompatActivity() {
-    private val searchHistoryPreferences by lazy {
-        SearchHistoryPreferences(applicationContext)
-    }
-
-    private val searchHistoryRepository by lazy {
-        SearchHistoryRepositoryImpl(searchHistoryPreferences)
-    }
-
-    private val searchHistory by lazy {
-        SearchHistory(searchHistoryRepository)
-    }
-
     private val viewModel: SearchViewModel by viewModels {
-        SearchViewModel.SearchViewModelFactory(searchHistory)
+        SearchViewModel.createSearchViewModelFactory(applicationContext)
     }
 
-    private lateinit var mainView: LinearLayout
+    private lateinit var mainView: ConstraintLayout
     private lateinit var editText: EditText
     private lateinit var clearSearchBtn: ImageView
     private lateinit var historyClearBtn: Button
     private lateinit var refreshBtn: Button
-    private lateinit var tracksRecycler: RecyclerView
+    private lateinit var searchRecycler: RecyclerView
     private lateinit var historySearchRecycler: RecyclerView
-    private lateinit var historySearchView: LinearLayout
-    private lateinit var emptyErrorView: LinearLayout
-    private lateinit var networkErrorView: LinearLayout
+    private lateinit var historySearchView: FrameLayout
+    private lateinit var emptyErrorView: ConstraintLayout
+    private lateinit var networkErrorView: ConstraintLayout
     private lateinit var loadingText: TextView
 
-    private lateinit var searchAdapter: SearchAdapter
-    private lateinit var historyAdapter: SearchHistoryAdapter
+    private lateinit var tracksAdapter: TracksAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +53,7 @@ class SearchActivity : AppCompatActivity() {
 
         setViews()
 
+        viewModel.initState()
         viewModel.userQuery.observe(this, setupEditTextObserver())
         viewModel.screenState.observe(this) { state ->
             render(state)
@@ -75,8 +61,8 @@ class SearchActivity : AppCompatActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val horizontalPadding = resources.getDimensionPixelSize(R.dimen.horizontalScreenPadding)
-            val verticalPadding = resources.getDimensionPixelSize(R.dimen.verticalScreenPadding)
+            val horizontalPadding = 0
+            val verticalPadding = 0
             v.setPadding(
                 horizontalPadding,
                 systemBars.top + verticalPadding,
@@ -88,13 +74,7 @@ class SearchActivity : AppCompatActivity() {
 
         setEditText()
         setupClickListeners()
-        setupSearchAdapter()
-        setupHistoryAdapter()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.saveSearchHistory()
+        setupAdapters()
     }
 
     private fun render(state: SearchScreenUiState) {
@@ -103,7 +83,7 @@ class SearchActivity : AppCompatActivity() {
             when (state.historyState) {
                 SearchHistoryState.EmptyHistory -> historySearchView.visibility = View.GONE
                 is SearchHistoryState.History -> {
-                    historyAdapter.submitList(state.historyState.searchedTracks)
+                    tracksAdapter.submitList(state.historyState.searchedTracks)
                     historySearchView.visibility = View.VISIBLE
                 }
             }
@@ -115,8 +95,8 @@ class SearchActivity : AppCompatActivity() {
             SearchState.Loading -> loadingText.visibility = View.VISIBLE
             SearchState.NetworkError -> networkErrorView.visibility = View.VISIBLE
             is SearchState.Success -> {
-                searchAdapter.submitList(state.searchState.tracks)
-                tracksRecycler.visibility = View.VISIBLE
+                tracksAdapter.submitList(state.searchState.tracks)
+                searchRecycler.visibility = View.VISIBLE
             }
         }
     }
@@ -138,7 +118,6 @@ class SearchActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 editText.clearFocus()
                 loadTracks(editText.text.toString())
-                clearSearchBtn.visibility = View.VISIBLE
                 true
             }
             false
@@ -146,10 +125,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun loadTracks(query: String) {
-        viewModel.getSearchResult(query)
+        viewModel.getTracksByQuery(query)
     }
 
     private fun onTrackClick(track: Track) {
+        val intent = TrackActivity.createIntent(applicationContext, track)
+        startActivity(intent)
         viewModel.addTrackToHistory(track)
     }
 
@@ -158,8 +139,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun onMainViewClick() {
-        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-        inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        hideKeyboard()
         editText.clearFocus()
     }
 
@@ -167,8 +147,8 @@ class SearchActivity : AppCompatActivity() {
         editText.setText("")
         editText.clearFocus()
         viewModel.onClearSearchBar()
-        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-        inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+
+        hideKeyboard()
     }
 
     private fun setClearBtnVisibility(s: String) {
@@ -179,49 +159,51 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun setupHistoryAdapter() {
-        historyAdapter = SearchHistoryAdapter()
-        historySearchRecycler.layoutManager = LinearLayoutManager(this)
-        historySearchRecycler.adapter = historyAdapter
-    }
-
-    private fun setupSearchAdapter() {
-        searchAdapter = SearchAdapter(
+    private fun setupAdapters() {
+        tracksAdapter = TracksAdapter(
             onItemClick = { track ->
                 onTrackClick(track)
             }
         )
-        tracksRecycler.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        tracksRecycler.adapter = searchAdapter
+        searchRecycler.layoutManager =
+            LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+        searchRecycler.adapter = tracksAdapter
+
+        historySearchRecycler.layoutManager = LinearLayoutManager(applicationContext)
+        historySearchRecycler.adapter = tracksAdapter
     }
 
     private fun setupClickListeners() {
         mainView.setOnClickListener { onMainViewClick() }
         clearSearchBtn.setOnClickListener { onClearSearchBtnClick() }
-        refreshBtn.setOnClickListener { viewModel.getSearchResult(viewModel.userQuery.value!!) }
+        refreshBtn.setOnClickListener { viewModel.getTracksByQuery(viewModel.userQuery.value!!) }
         historyClearBtn.setOnClickListener { onHistoryClearBtnClick() }
     }
 
     private fun hideViews() {
-        tracksRecycler.visibility = View.GONE
+        searchRecycler.visibility = View.GONE
         networkErrorView.visibility = View.GONE
         loadingText.visibility = View.GONE
         emptyErrorView.visibility = View.GONE
         historySearchView.visibility = View.GONE
     }
 
+    private fun hideKeyboard() {
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+    }
+
     private fun setViews() {
-        mainView = findViewById<LinearLayout>(R.id.main)
+        mainView = findViewById<ConstraintLayout>(R.id.main)
         editText = findViewById<EditText>(R.id.editText)
         clearSearchBtn = findViewById<ImageView>(R.id.clear_search_btn)
         historyClearBtn = findViewById<Button>(R.id.clear_history_btn)
         refreshBtn = findViewById<Button>(R.id.refresh_btn)
-        tracksRecycler = findViewById<RecyclerView>(R.id.tracks_recycler)
-        emptyErrorView = findViewById<LinearLayout>(R.id.empty_result_view)
-        networkErrorView = findViewById<LinearLayout>(R.id.network_error_view)
+        searchRecycler = findViewById<RecyclerView>(R.id.tracks_recycler)
+        emptyErrorView = findViewById<ConstraintLayout>(R.id.empty_result_view)
+        networkErrorView = findViewById<ConstraintLayout>(R.id.network_error_view)
         historySearchRecycler = findViewById<RecyclerView>(R.id.history_search_recycler)
-        historySearchView = findViewById<LinearLayout>(R.id.search_history_view)
+        historySearchView = findViewById<FrameLayout>(R.id.search_history_view)
         loadingText = findViewById<TextView>(R.id.loading)
     }
 }

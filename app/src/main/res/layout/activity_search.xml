@@ -1,38 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    android:orientation="vertical"
-    android:paddingHorizontal="@dimen/horizontalScreenPadding"
-    android:paddingVertical="@dimen/verticalScreenPadding"
     tools:context=".ui.searchScreen.SearchActivity">
 
+    <!--region гайдлайны-->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/topGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bottomGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="16dp" />
+    <!--endregion-->
+
     <TextView
+        android:id="@+id/searchTextView"
         style="@style/headerTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/search" />
+        android:text="@string/search"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintTop_toTopOf="@id/topGuideline" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!--region строка поиска-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/searchBar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="@drawable/search_bar_bg"
-        android:gravity="center"
-        android:orientation="horizontal"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="10dp">
+        android:paddingVertical="10dp"
+        app:layout_constraintEnd_toEndOf="@id/rightGuideline"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@id/searchTextView">
 
         <ImageView
+            android:id="@+id/searchImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/search"
             android:src="@drawable/ic_search_16"
-
-            />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/editText"
@@ -40,13 +76,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
             android:autofillHints="name"
             android:background="@drawable/search_bar_bg"
             android:hint="@string/search"
             android:imeOptions="actionDone"
-            android:singleLine="true" />
+            android:singleLine="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/clear_search_btn"
+            app:layout_constraintStart_toEndOf="@id/searchImageView"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/clear_search_btn"
@@ -54,104 +93,66 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/clear_search"
             android:src="@drawable/ic_clear_search_16"
-            android:visibility="gone" />
-    </LinearLayout>
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!--endregion-->
 
+    <!-- region поиск -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tracks_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="24dp"
-        android:visibility="gone">
+        app:layout_constraintTop_toBottomOf="@id/searchBar"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintEnd_toEndOf="@id/rightGuideline"
+        app:layout_constraintBottom_toBottomOf="@id/bottomGuideline"/>
+    <!-- endregion -->
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <LinearLayout
-        android:id="@+id/empty_result_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="110dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/empty_error"
-            android:src="@drawable/ic_empty_result_120" />
-
-        <TextView
-            style="@style/mediumTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/empty_error" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/network_error_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="110dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/network_error"
-            android:src="@drawable/ic_network_error_120" />
-
-        <TextView
-            style="@style/mediumTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="@string/network_error" />
-
-        <Button
-            android:id="@+id/refresh_btn"
-            style="@style/defaultBtnStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/refresh" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <!-- region история поиска -->
+    <FrameLayout
         android:id="@+id/search_history_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            style="@style/mediumTextStyle"
-            android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintEnd_toEndOf="@id/rightGuideline"
+        app:layout_constraintTop_toBottomOf="@id/searchBar"
+        app:layout_constraintBottom_toBottomOf="@id/bottomGuideline"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
-            android:text="@string/history_message" />
+            android:orientation="vertical"
+            android:visibility="visible">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/history_search_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="32dp">
+            <TextView
+                android:id="@+id/youSearchedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/history_message"
+                android:layout_gravity="center_horizontal"
+                style="@style/mediumTextStyle"
+                android:layout_marginTop="50dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/history_search_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintHeight_max="520dp"
+                app:layout_constraintTop_toBottomOf="@id/youSearchedTextView"
+                app:layout_constraintBottom_toTopOf="@id/clear_history_btn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+            </androidx.recyclerview.widget.RecyclerView>
 
             <Button
                 android:id="@+id/clear_history_btn"
@@ -159,19 +160,113 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/clear_history" />
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:text="@string/clear_history"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        </FrameLayout>
-    </LinearLayout>
+        </LinearLayout>
 
+    </FrameLayout>
+
+    <!-- endregion -->
+
+    <!--region пустой результат-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/empty_result_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintEnd_toEndOf="@id/rightGuideline"
+        app:layout_constraintTop_toBottomOf="@id/searchBar"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/emptyImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_empty_result_120"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/empty_error"
+            />
+        <TextView
+            style="@style/mediumTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/empty_error"
+            app:layout_constraintTop_toBottomOf="@id/emptyImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/empty_error"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!--endregion-->
+
+    <!--region ошибка сети-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/network_error_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintEnd_toEndOf="@id/rightGuideline"
+        app:layout_constraintTop_toBottomOf="@id/searchBar">
+
+        <ImageView
+            android:id="@+id/networkErrorImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_network_error_120"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/network_error"
+            />
+
+        <TextView
+            android:id="@+id/networkErrorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/network_error"
+            style="@style/mediumTextStyle"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/networkErrorImageView"
+            app:layout_constraintStart_toStartOf="@id/networkErrorImageView"
+            app:layout_constraintEnd_toEndOf="@id/networkErrorImageView"
+            />
+
+        <Button
+            android:id="@+id/refresh_btn"
+            style="@style/defaultBtnStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/refresh"
+            app:layout_constraintTop_toBottomOf="@id/networkErrorTextView"
+            app:layout_constraintStart_toStartOf="@id/networkErrorTextView"
+            app:layout_constraintEnd_toEndOf="@id/networkErrorTextView"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!--endregion ошибка сети-->
+
+    <!--region загрузка-->
     <TextView
         android:id="@+id/loading"
         style="@style/mediumTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginTop="100dp"
         android:text="@string/loading"
-        android:visibility="gone">
-    </TextView>
-</LinearLayout>
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/searchBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <!--endregion-->
+</androidx.constraintlayout.widget.ConstraintLayout>
