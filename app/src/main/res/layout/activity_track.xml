@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="?attr/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.trackScreen.TrackActivity">
@@ -79,7 +80,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/artWork"
-                android:src="@drawable/album"
+                tools:src="@drawable/ic_placeholder_312"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="@id/rightGuideline"
                 app:layout_constraintStart_toStartOf="@id/leftGuideline"
