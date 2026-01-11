@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import androidx.core.net.toUri
 import com.example.playlistmaker.App
-import com.example.playlistmaker.data.preferences.ThemePreferences
+import com.example.playlistmaker.data.preferences.ThemePreferencesImpl
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
@@ -24,14 +24,14 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var userAgreementBtn: LinearLayout
     private lateinit var themeSwitcher: SwitchMaterial
 
-    private lateinit var themePreferences: ThemePreferences
+    private lateinit var themePreferencesImpl: ThemePreferencesImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
 
-        themePreferences = ThemePreferences(this)
+        themePreferencesImpl = ThemePreferencesImpl(this)
 
         backBtn = findViewById<ImageView>(R.id.back_btn)
         shareBtn = findViewById<LinearLayout>(R.id.share_btn)
@@ -71,10 +71,10 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setChecked(): Boolean {
-        return if (!themePreferences.getSharedPreferences().contains(ThemePreferences.ENABLED_DARK_THEME)) {
+        return if (!themePreferencesImpl.get().contains(ThemePreferencesImpl.ENABLED_DARK_THEME)) {
             isDarkTheme(applicationContext)
         } else {
-            themePreferences.isDarkTheme()
+            themePreferencesImpl.isDarkTheme()
         }
     }
 

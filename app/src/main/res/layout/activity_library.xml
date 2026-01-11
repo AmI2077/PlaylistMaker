@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="@dimen/horizontalScreenPadding"
     android:paddingVertical="@dimen/verticalScreenPadding"
-    tools:context=".ui.LibraryActivity">
+    tools:context=".ui.libraryScreen.LibraryActivity">
 
     <TextView
         style="@style/headerTextStyle"

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
+import com.example.playlistmaker.ui.libraryScreen.LibraryActivity
 import com.example.playlistmaker.ui.searchScreen.SearchActivity
 
 class MainActivity : AppCompatActivity() {
