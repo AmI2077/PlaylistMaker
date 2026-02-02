@@ -1,6 +1,6 @@
 package com.example.playlistmaker.ui.searchScreen.state
 
-import com.example.playlistmaker.data.models.Track
+import com.example.playlistmaker.data.model.Track
 
 sealed class SearchState {
     object Idle: SearchState()

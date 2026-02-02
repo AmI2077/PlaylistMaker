@@ -1,6 +1,6 @@
 package com.example.playlistmaker.data.repository
 
-import com.example.playlistmaker.data.models.Track
+import com.example.playlistmaker.data.model.Track
 import com.example.playlistmaker.data.preferences.SearchHistoryPreferences
 
 class SearchHistoryRepositoryImpl(
@@ -11,7 +11,7 @@ class SearchHistoryRepositoryImpl(
     }
 
     override fun save(tracks: List<Track>) {
-        searchHistoryPreferences.write(tracks.toTypedArray())
+        searchHistoryPreferences.write(tracks.toList())
     }
 
     override fun clear() {
