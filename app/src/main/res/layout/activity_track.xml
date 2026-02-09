@@ -6,7 +6,7 @@
     android:background="?attr/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.trackScreen.TrackActivity">
+    tools:context=".ui.playerScreen.PlayerActivity">
 
     <FrameLayout
         android:id="@+id/back_frame"
@@ -87,7 +87,7 @@
                 app:layout_constraintTop_toBottomOf="@id/topGuideline" />
             <!--endregion-->
 
-            <!--region        название и артист-->
+            <!--region название и артист-->
             <TextView
                 android:id="@+id/track_name"
                 style="@style/headerTextStyle"
@@ -122,23 +122,41 @@
                 android:background="@color/transparent"
                 android:contentDescription="@string/add_to_playlist"
                 android:src="@drawable/ic_add_to_playlist_btn_51"
-                app:layout_constraintBottom_toBottomOf="@id/play_btn"
-                app:layout_constraintEnd_toStartOf="@id/play_btn"
+                app:layout_constraintBottom_toBottomOf="@id/playBtnView"
+                app:layout_constraintEnd_toStartOf="@id/playBtnView"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="@id/leftGuideline"
-                app:layout_constraintTop_toTopOf="@id/play_btn" />
+                app:layout_constraintTop_toTopOf="@id/playBtnView" />
 
-            <ImageButton
-                android:id="@+id/play_btn"
+
+            <FrameLayout
+                android:id="@+id/playBtnView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:background="@color/transparent"
-                android:contentDescription="@string/play_track"
-                android:src="@drawable/ic_play_btn_100"
                 app:layout_constraintEnd_toStartOf="@id/add_to_fav_btn"
                 app:layout_constraintStart_toEndOf="@id/add_to_playlist_btn"
-                app:layout_constraintTop_toBottomOf="@id/artist_name" />
+                app:layout_constraintTop_toBottomOf="@id/artist_name">
+
+                <ImageButton
+                    android:id="@+id/play_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/play_track"
+                    android:src="@drawable/ic_play_btn_100" />
+
+                <ImageButton
+                    android:id="@+id/pause_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/play_track"
+                    android:src="@drawable/ic_pause_btn_100"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+
 
             <ImageButton
                 android:id="@+id/add_to_fav_btn"
@@ -148,10 +166,10 @@
                 android:background="@color/transparent"
                 android:contentDescription="@string/add_to_fav"
                 android:src="@drawable/ic_add_to_fav_btn_51"
-                app:layout_constraintBottom_toBottomOf="@id/play_btn"
+                app:layout_constraintBottom_toBottomOf="@id/playBtnView"
                 app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-                app:layout_constraintStart_toEndOf="@id/play_btn"
-                app:layout_constraintTop_toTopOf="@id/play_btn" />
+                app:layout_constraintStart_toEndOf="@id/playBtnView"
+                app:layout_constraintTop_toTopOf="@id/playBtnView" />
 
             <TextView
                 android:id="@+id/track_time_now"
@@ -161,7 +179,7 @@
                 android:layout_marginTop="4dp"
                 app:layout_constraintEnd_toEndOf="@id/rightGuideline"
                 app:layout_constraintStart_toStartOf="@id/leftGuideline"
-                app:layout_constraintTop_toBottomOf="@id/play_btn"
+                app:layout_constraintTop_toBottomOf="@id/playBtnView"
                 tools:text="0:30" />
             <!--endregion кнопки добавить-->
 
@@ -237,6 +255,7 @@
             <TextView
                 android:id="@+id/track_time"
                 style="@style/trackInfoTextStyle"
+                android:gravity="end"
                 android:layout_marginTop="30dp"
                 app:layout_constraintEnd_toEndOf="@id/rightGuideline"
                 app:layout_constraintStart_toEndOf="@id/texts_barrier"
@@ -247,6 +266,8 @@
             <TextView
                 android:id="@+id/collection_name"
                 style="@style/trackInfoTextStyle"
+                android:ellipsize="end"
+                android:maxLines="1"
                 app:layout_constraintEnd_toEndOf="@id/rightGuideline"
                 app:layout_constraintStart_toEndOf="@id/texts_barrier"
                 app:layout_constraintTop_toBottomOf="@id/track_time"

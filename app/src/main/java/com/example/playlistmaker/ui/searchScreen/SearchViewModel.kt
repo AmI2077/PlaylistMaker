@@ -9,9 +9,9 @@ import com.example.playlistmaker.data.api.RetrofitClient
 import com.example.playlistmaker.data.model.RequestResult
 import com.example.playlistmaker.data.model.Track
 import com.example.playlistmaker.data.preferences.SearchHistoryPreferences
-import com.example.playlistmaker.data.repository.SearchHistoryRepository
-import com.example.playlistmaker.data.repository.SearchHistoryRepositoryImpl
-import com.example.playlistmaker.data.repository.TracksRepositoryImpl
+import com.example.playlistmaker.data.repository.interfaces.SearchHistoryRepository
+import com.example.playlistmaker.data.repository.implementation.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.data.repository.implementation.TracksRepositoryImpl
 import com.example.playlistmaker.ui.searchScreen.state.SearchHistoryState
 import com.example.playlistmaker.ui.searchScreen.state.SearchScreenUiState
 import com.example.playlistmaker.ui.searchScreen.state.SearchState

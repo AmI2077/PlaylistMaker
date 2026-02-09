@@ -1,9 +1,10 @@
-package com.example.playlistmaker.data.repository
+package com.example.playlistmaker.data.repository.implementation
 
 import com.example.playlistmaker.data.api.TracksApiService
 import com.example.playlistmaker.data.model.RequestResult
 import com.example.playlistmaker.data.model.Track
 import com.example.playlistmaker.data.model.TracksResponse
+import com.example.playlistmaker.data.repository.interfaces.TrackRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
