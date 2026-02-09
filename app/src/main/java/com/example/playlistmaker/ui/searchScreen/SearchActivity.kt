@@ -1,14 +1,14 @@
 package com.example.playlistmaker.ui.searchScreen
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,16 +21,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.model.Track
-import com.example.playlistmaker.ui.trackScreen.TrackActivity
+import com.example.playlistmaker.ui.playerScreen.PlayerActivity
 import com.example.playlistmaker.ui.searchScreen.tracksRecycler.TracksAdapter
 import com.example.playlistmaker.ui.searchScreen.state.SearchHistoryState
 import com.example.playlistmaker.ui.searchScreen.state.SearchScreenUiState
 import com.example.playlistmaker.ui.searchScreen.state.SearchState
+import kotlinx.coroutines.Runnable
 
 class SearchActivity : AppCompatActivity() {
     private val viewModel: SearchViewModel by viewModels {
         SearchViewModel.createSearchViewModelFactory(applicationContext)
     }
+
+    private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) {
+        Handler(mainLooper)
+    }
+
+    private var searchRunnable: Runnable = Runnable {}
 
     private lateinit var mainView: ConstraintLayout
     private lateinit var editText: EditText
@@ -42,7 +49,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historySearchView: FrameLayout
     private lateinit var emptyErrorView: ConstraintLayout
     private lateinit var networkErrorView: ConstraintLayout
-    private lateinit var loadingText: TextView
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var tracksAdapter: TracksAdapter
 
@@ -92,7 +99,7 @@ class SearchActivity : AppCompatActivity() {
             SearchState.EmptyResult -> emptyErrorView.visibility = View.VISIBLE
             is SearchState.Error -> emptyErrorView.visibility = View.VISIBLE
             SearchState.Idle -> {}
-            SearchState.Loading -> loadingText.visibility = View.VISIBLE
+            SearchState.Loading -> progressBar.visibility = View.VISIBLE
             SearchState.NetworkError -> networkErrorView.visibility = View.VISIBLE
             is SearchState.Success -> {
                 tracksAdapter.submitList(state.searchState.tracks)
@@ -112,26 +119,39 @@ class SearchActivity : AppCompatActivity() {
         editText.requestFocus()
         editText.setText(viewModel.userQuery.value)
         editText.doOnTextChanged { s, p1, p2, p3 ->
+            mainHandler.removeCallbacks(searchRunnable)
+            searchRunnable = getSearchRunnable(s.toString())
             viewModel.setUserQuery(s.toString())
-        }
-        editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                editText.clearFocus()
-                loadTracks(editText.text.toString())
-                true
-            }
-            false
+            mainHandler.postDelayed(searchRunnable, SEARCH_DELAY)
         }
     }
+
+    private fun getSearchRunnable(s: String): Runnable {
+        return Runnable {
+            if (!s.toString().isEmpty()) loadTracks(s.toString())
+        }
+    }
+
 
     private fun loadTracks(query: String) {
         viewModel.getTracksByQuery(query)
     }
 
     private fun onTrackClick(track: Track) {
-        val intent = TrackActivity.createIntent(applicationContext, track)
-        startActivity(intent)
         viewModel.addTrackToHistory(track)
+        if (clickDebounce()) {
+            val intent = PlayerActivity.createIntent(applicationContext, track)
+            startActivity(intent)
+        }
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (current) {
+            isClickAllowed = false
+            mainHandler.postDelayed({isClickAllowed = true}, TRACK_CLICK_DELAY)
+        }
+        return current
     }
 
     private fun onHistoryClearBtnClick() {
@@ -183,7 +203,7 @@ class SearchActivity : AppCompatActivity() {
     private fun hideViews() {
         searchRecycler.visibility = View.GONE
         networkErrorView.visibility = View.GONE
-        loadingText.visibility = View.GONE
+        progressBar.visibility = View.GONE
         emptyErrorView.visibility = View.GONE
         historySearchView.visibility = View.GONE
     }
@@ -204,6 +224,13 @@ class SearchActivity : AppCompatActivity() {
         networkErrorView = findViewById<ConstraintLayout>(R.id.network_error_view)
         historySearchRecycler = findViewById<RecyclerView>(R.id.history_search_recycler)
         historySearchView = findViewById<FrameLayout>(R.id.search_history_view)
-        loadingText = findViewById<TextView>(R.id.loading)
+        progressBar = findViewById<ProgressBar>(R.id.loading)
+    }
+
+
+    companion object {
+        const val SEARCH_DELAY = 2000L
+        const val TRACK_CLICK_DELAY = 1000L
+        var isClickAllowed = true
     }
 }

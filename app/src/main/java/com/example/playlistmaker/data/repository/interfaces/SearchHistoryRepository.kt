@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.repository
+package com.example.playlistmaker.data.repository.interfaces
 
 import com.example.playlistmaker.data.model.Track
 
