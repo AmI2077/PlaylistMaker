@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val mediaPlayer: MediaPlayer
 ): ViewModel() {
-    var playUrl = ""
+    private var playUrl = ""
     private var isPrepared = false
     private var timerJob: Job? = null
 
@@ -58,7 +58,7 @@ class PlayerViewModel(
         timerJob = viewModelScope.launch {
             while (mediaPlayer.isPlaying) {
                 _playTime.postValue(mediaPlayer.currentPosition)
-                delay(500)
+                delay(TIMER_DELAY)
             }
         }
     }
@@ -74,6 +74,8 @@ class PlayerViewModel(
     }
 
     companion object {
+        const val TIMER_DELAY = 500L
+
         fun createPlayerViewModelFactory(): ViewModelProvider.Factory {
             val mediaPlayer = MediaPlayer()
             return object: ViewModelProvider.Factory {

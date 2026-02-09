@@ -33,9 +33,11 @@ class SearchActivity : AppCompatActivity() {
         SearchViewModel.createSearchViewModelFactory(applicationContext)
     }
 
-    private val mainHandler by lazy {
+    private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) {
         Handler(mainLooper)
     }
+
+    private var searchRunnable: Runnable = Runnable {}
 
     private lateinit var mainView: ConstraintLayout
     private lateinit var editText: EditText
@@ -117,13 +119,16 @@ class SearchActivity : AppCompatActivity() {
         editText.requestFocus()
         editText.setText(viewModel.userQuery.value)
         editText.doOnTextChanged { s, p1, p2, p3 ->
-            val searchRunnable = Runnable {
-
-                if (!s.toString().isEmpty()) loadTracks(s.toString())
-            }
-            viewModel.setUserQuery(s.toString())
             mainHandler.removeCallbacks(searchRunnable)
+            searchRunnable = getSearchRunnable(s.toString())
+            viewModel.setUserQuery(s.toString())
             mainHandler.postDelayed(searchRunnable, SEARCH_DELAY)
+        }
+    }
+
+    private fun getSearchRunnable(s: String): Runnable {
+        return Runnable {
+            if (!s.toString().isEmpty()) loadTracks(s.toString())
         }
     }
 
