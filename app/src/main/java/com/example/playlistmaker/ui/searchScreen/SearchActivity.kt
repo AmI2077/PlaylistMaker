@@ -20,24 +20,26 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.model.Track
+import com.example.playlistmaker.di.ServiceCreator
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.viewModels.SearchViewModel
 import com.example.playlistmaker.ui.playerScreen.PlayerActivity
 import com.example.playlistmaker.ui.searchScreen.tracksRecycler.TracksAdapter
-import com.example.playlistmaker.ui.searchScreen.state.SearchHistoryState
-import com.example.playlistmaker.ui.searchScreen.state.SearchScreenUiState
-import com.example.playlistmaker.ui.searchScreen.state.SearchState
+import com.example.playlistmaker.presentation.states.SearchHistoryState
+import com.example.playlistmaker.presentation.states.SearchScreenUiState
+import com.example.playlistmaker.presentation.states.SearchState
 import kotlinx.coroutines.Runnable
 
 class SearchActivity : AppCompatActivity() {
     private val viewModel: SearchViewModel by viewModels {
-        SearchViewModel.createSearchViewModelFactory(applicationContext)
+        ServiceCreator.createSearchViewModelFactory(applicationContext)
     }
 
     private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) {
         Handler(mainLooper)
     }
 
-    private var searchRunnable: Runnable = Runnable {}
+    private var searchRunnable: Runnable? = null
 
     private lateinit var mainView: ConstraintLayout
     private lateinit var editText: EditText
@@ -119,10 +121,10 @@ class SearchActivity : AppCompatActivity() {
         editText.requestFocus()
         editText.setText(viewModel.userQuery.value)
         editText.doOnTextChanged { s, p1, p2, p3 ->
-            mainHandler.removeCallbacks(searchRunnable)
+            searchRunnable?.let { mainHandler.removeCallbacks(it) }
             searchRunnable = getSearchRunnable(s.toString())
             viewModel.setUserQuery(s.toString())
-            mainHandler.postDelayed(searchRunnable, SEARCH_DELAY)
+            searchRunnable?.let { mainHandler.postDelayed(it, SEARCH_DELAY)}
         }
     }
 

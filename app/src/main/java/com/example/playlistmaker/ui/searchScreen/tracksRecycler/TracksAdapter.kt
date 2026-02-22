@@ -1,9 +1,8 @@
 package com.example.playlistmaker.ui.searchScreen.tracksRecycler
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.playlistmaker.data.model.Track
+import com.example.playlistmaker.domain.models.Track
 
 class TracksAdapter(
     val onItemClick: (track: Track) -> Unit

@@ -2,7 +2,7 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.data.preferences.ThemePreferencesImpl
+import com.example.playlistmaker.data.sharedPrefs.ThemePreferencesImpl
 
 class App: Application() {
     lateinit var themePreferencesImpl: ThemePreferencesImpl

@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.searchScreen.tracksRecycler
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -9,10 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.model.Track
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.utils.DimensionsUtils
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class TracksViewHolder(
     parent: ViewGroup,
@@ -32,8 +29,7 @@ class TracksViewHolder(
         }
         trackNameView.text = model.trackName
         artistNameView.text = model.artistName
-        val duration = model.trackTimeMillis.toLong()
-        trackTimeView.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration)
+        trackTimeView.text = model.trackTimeMillis
         setImage(model.artworkUrl100)
     }
 

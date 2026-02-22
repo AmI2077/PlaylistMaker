@@ -20,8 +20,10 @@ import androidx.lifecycle.LifecycleOwner
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.model.Track
-import com.example.playlistmaker.ui.playerScreen.state.PlayState
+import com.example.playlistmaker.di.ServiceCreator
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.viewModels.PlayerViewModel
+import com.example.playlistmaker.presentation.states.PlayState
 import com.example.playlistmaker.utils.DimensionsUtils
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -32,7 +34,7 @@ import kotlin.getValue
 class PlayerActivity : AppCompatActivity() {
 
     private val playerViewModel: PlayerViewModel by viewModels {
-        PlayerViewModel.createPlayerViewModelFactory()
+        ServiceCreator.createPlayerViewModelFactory()
     }
 
     lateinit var backBtn: ImageButton
@@ -108,8 +110,7 @@ class PlayerActivity : AppCompatActivity() {
             setImage(track.artworkUrl100, trackArtWork)
             trackName.text = track.trackName
             artistName.text = track.artistName
-            val duration = track.trackTimeMillis.toLong()
-            trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration)
+            trackTime.text = track.trackTimeMillis
             collectionName.text = track.collectionName
             releaseDate.text = Instant.parse(track.releaseDate)
                 .atZone(ZoneId.of("UTC"))

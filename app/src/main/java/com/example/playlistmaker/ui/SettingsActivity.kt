@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import androidx.core.net.toUri
 import com.example.playlistmaker.App
-import com.example.playlistmaker.data.preferences.ThemePreferencesImpl
+import com.example.playlistmaker.data.sharedPrefs.ThemePreferencesImpl
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
