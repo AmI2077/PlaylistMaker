@@ -9,8 +9,11 @@ import com.example.playlistmaker.data.network.RetrofitClient
 import com.example.playlistmaker.data.repository.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.repository.TracksRepositoryImpl
 import com.example.playlistmaker.data.sharedPrefs.SearchHistoryPreferencesImpl
+import com.example.playlistmaker.data.sharedPrefs.ThemePreferencesImpl
+import com.example.playlistmaker.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.interfaces.SearchHistoryRepository
+import com.example.playlistmaker.domain.interfaces.SettingsInteractor
 import com.example.playlistmaker.domain.interfaces.TracksRepository
 import com.example.playlistmaker.presentation.viewModels.PlayerViewModel
 import com.example.playlistmaker.presentation.viewModels.SearchViewModel
@@ -19,6 +22,12 @@ object ServiceCreator {
 
     private val networkClient = RetrofitClient
     private val trackMapper = TrackMapperImpl
+
+    fun getSettingsInteractor(context: Context): SettingsInteractor {
+        val themePrefs = ThemePreferencesImpl(context)
+        return SettingsInteractorImpl(themePrefs, ThemePreferencesImpl.THEME_PREFERENCES,
+            ThemePreferencesImpl.ENABLED_DARK_THEME)
+    }
 
     private fun getTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(networkClient, trackMapper)
