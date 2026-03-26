@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/horizontalScreenPadding"
     android:paddingVertical="@dimen/verticalScreenPadding"
-    tools:context=".ui.MainActivity">
+    tools:context=".main.MainActivity">
 
     <TextView
         style="@style/headerTextStyle"
