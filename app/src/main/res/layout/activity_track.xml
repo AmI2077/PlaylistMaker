@@ -6,7 +6,7 @@
     android:background="?attr/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".player.ui.PlayerActivity">
+    tools:context=".ui.playerScreen.PlayerActivity">
 
     <FrameLayout
         android:id="@+id/back_frame"
