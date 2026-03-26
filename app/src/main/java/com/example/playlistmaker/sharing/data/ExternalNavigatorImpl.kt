@@ -27,6 +27,7 @@ class ExternalNavigatorImpl(
             putExtra(Intent.EXTRA_SUBJECT, emailData.themeMessage)
             putExtra(Intent.EXTRA_TEXT, emailData.message)
         }
+
         context.startActivity(emailIntent)
     }
 
