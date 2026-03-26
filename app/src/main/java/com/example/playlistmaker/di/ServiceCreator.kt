@@ -4,29 +4,39 @@ import android.content.Context
 import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.data.mapper.TrackMapperImpl
-import com.example.playlistmaker.data.network.RetrofitClient
-import com.example.playlistmaker.data.repository.SearchHistoryRepositoryImpl
-import com.example.playlistmaker.data.repository.TracksRepositoryImpl
-import com.example.playlistmaker.data.sharedPrefs.SearchHistoryPreferencesImpl
-import com.example.playlistmaker.data.sharedPrefs.ThemePreferencesImpl
-import com.example.playlistmaker.domain.impl.SettingsInteractorImpl
-import com.example.playlistmaker.domain.impl.TracksInteractorImpl
-import com.example.playlistmaker.domain.interfaces.SearchHistoryRepository
-import com.example.playlistmaker.domain.interfaces.SettingsInteractor
-import com.example.playlistmaker.domain.interfaces.TracksRepository
-import com.example.playlistmaker.presentation.viewModels.PlayerViewModel
-import com.example.playlistmaker.presentation.viewModels.SearchViewModel
+import com.example.playlistmaker.search.data.mapper.TrackMapperImpl
+import com.example.playlistmaker.search.data.network.RetrofitClient
+import com.example.playlistmaker.search.data.repository.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.search.data.repository.TracksRepositoryImpl
+import com.example.playlistmaker.settings.domain.impl.ThemeInteractorImpl
+import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
+import com.example.playlistmaker.search.domain.interfaces.SearchHistoryRepository
+import com.example.playlistmaker.settings.domain.interfaces.ThemeInteractor
+import com.example.playlistmaker.search.domain.interfaces.TracksRepository
+import com.example.playlistmaker.player.ui.PlayerViewModel
+import com.example.playlistmaker.search.data.local.PrefsStorageClient
+import com.example.playlistmaker.search.ui.SearchViewModel
+import com.example.playlistmaker.settings.data.ThemeRepositoryImpl
+import com.example.playlistmaker.settings.ui.SettingsViewModel
+import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
+import com.example.playlistmaker.sharing.data.ResourceClientImpl
+import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
+import com.example.playlistmaker.sharing.domain.interfaces.SharingInteractor
 
 object ServiceCreator {
 
     private val networkClient = RetrofitClient
     private val trackMapper = TrackMapperImpl
 
-    fun getSettingsInteractor(context: Context): SettingsInteractor {
-        val themePrefs = ThemePreferencesImpl(context)
-        return SettingsInteractorImpl(themePrefs, ThemePreferencesImpl.THEME_PREFERENCES,
-            ThemePreferencesImpl.ENABLED_DARK_THEME)
+    fun getThemeInteractor(context: Context): ThemeInteractor {
+        return ThemeInteractorImpl(
+            ThemeRepositoryImpl(context)
+        )
+    }
+
+    fun getSharingInteractor(context: Context): SharingInteractor {
+        val resourceClient = ResourceClientImpl(context)
+        return SharingInteractorImpl(ExternalNavigatorImpl(context, resourceClient))
     }
 
     private fun getTracksRepository(): TracksRepository {
@@ -34,12 +44,30 @@ object ServiceCreator {
     }
 
     private fun getSearchHistoryRepository(context: Context): SearchHistoryRepository {
-        return SearchHistoryRepositoryImpl(SearchHistoryPreferencesImpl(context))
+        return SearchHistoryRepositoryImpl(PrefsStorageClient(context))
     }
 
     private fun getMediaPlayer(): MediaPlayer {
         return MediaPlayer()
     }
+
+
+    fun createSettingsViewModelFactory(context: Context): ViewModelProvider.Factory {
+        return object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
+                    @Suppress("UNCHECKED_CAST")
+                    return SettingsViewModel(
+                        getSharingInteractor(context),
+                        getThemeInteractor(context)
+                    ) as T
+                } else {
+                    throw IllegalArgumentException("non SettingsViewModel class")
+                }
+            }
+        }
+    }
+
 
     fun createPlayerViewModelFactory(): ViewModelProvider.Factory {
         return object: ViewModelProvider.Factory {
