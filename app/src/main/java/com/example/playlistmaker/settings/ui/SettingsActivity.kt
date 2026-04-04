@@ -4,12 +4,12 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.di.ServiceCreator
+import com.example.playlistmaker.main.App
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -47,17 +47,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun render(themeState: ThemeState) {
-        when (themeState) {
-            ThemeState.DarkThemeState -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                binding.themeSwitcher.isChecked = true
-            }
-
-            ThemeState.LightThemeState -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                binding.themeSwitcher.isChecked = false
-            }
-        }
+        binding.themeSwitcher.isChecked = (application as App).switchTheme(themeState)
     }
 
     private fun setupClickListeners() {

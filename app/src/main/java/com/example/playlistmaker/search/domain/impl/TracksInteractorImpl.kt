@@ -1,7 +1,7 @@
 package com.example.playlistmaker.search.domain.impl
 
-import com.example.playlistmaker.search.ui.states.SearchHistoryState
-import com.example.playlistmaker.search.ui.states.SearchState
+import com.example.playlistmaker.search.domain.models.SearchHistoryState
+import com.example.playlistmaker.search.domain.models.SearchState
 import com.example.playlistmaker.search.domain.interfaces.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.interfaces.TracksInteractor
 import com.example.playlistmaker.search.domain.interfaces.TracksRepository

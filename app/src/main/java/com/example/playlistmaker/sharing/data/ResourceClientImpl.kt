@@ -2,6 +2,7 @@ package com.example.playlistmaker.sharing.data
 
 import android.content.Context
 import com.example.playlistmaker.R
+import com.example.playlistmaker.sharing.domain.interfaces.ResourceClient
 import com.example.playlistmaker.sharing.domain.model.EmailData
 
 class ResourceClientImpl(private val context: Context): ResourceClient {

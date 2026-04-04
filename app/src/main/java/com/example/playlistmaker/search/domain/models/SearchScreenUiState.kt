@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.ui.states
+package com.example.playlistmaker.search.domain.models
 
 data class SearchScreenUiState(
     val searchState: SearchState,

@@ -4,8 +4,6 @@ import com.example.playlistmaker.search.data.dto.ResponseResultDto
 import com.example.playlistmaker.search.data.dto.TrackDto
 import com.example.playlistmaker.search.data.dto.TrackRequestDto
 import com.example.playlistmaker.search.data.dto.TrackResponseDto
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -21,19 +19,16 @@ object RetrofitClient : NetworkClient {
     private val tracksApi: TracksApiService = retrofit.create(TracksApiService::class.java)
 
     override suspend fun requestTracks(trackRequestDto: TrackRequestDto): ResponseResultDto =
-        withContext(Dispatchers.IO) {
-            try {
-                val response = tracksApi.getTracksByQuery(trackRequestDto.query)
-                ResponseResultDto.Success(
-                    data = TrackResponseDto(
-                        response.body()?.resultCount ?: 0,
-                        response.body()?.results ?: emptyList<TrackDto>()
-                    )
+        try {
+            val response = tracksApi.getTracksByQuery(trackRequestDto.query)
+            ResponseResultDto.Success(
+                data = TrackResponseDto(
+                    response.body()?.resultCount ?: 0,
+                    response.body()?.results ?: emptyList<TrackDto>()
                 )
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                ResponseResultDto.Failure
-            }
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ResponseResultDto.Failure
         }
 }

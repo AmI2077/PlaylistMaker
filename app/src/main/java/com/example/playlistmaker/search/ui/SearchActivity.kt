@@ -16,9 +16,9 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.di.ServiceCreator
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.ui.states.SearchHistoryState
-import com.example.playlistmaker.search.ui.states.SearchScreenUiState
-import com.example.playlistmaker.search.ui.states.SearchState
+import com.example.playlistmaker.search.domain.models.SearchHistoryState
+import com.example.playlistmaker.search.domain.models.SearchScreenUiState
+import com.example.playlistmaker.search.domain.models.SearchState
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.ui.tracksRecycler.TracksAdapter
 import kotlinx.coroutines.Runnable
@@ -183,6 +183,7 @@ class SearchActivity : AppCompatActivity() {
         binding.clearSearchBtn.setOnClickListener { onClearSearchBtnClick() }
         binding.refreshBtn.setOnClickListener { viewModel.getTracksByQuery(viewModel.userQuery.value!!) }
         binding.clearHistoryBtn.setOnClickListener { onHistoryClearBtnClick() }
+        binding.backBtn.setOnClickListener { finish() }
     }
 
     private fun hideViews() {

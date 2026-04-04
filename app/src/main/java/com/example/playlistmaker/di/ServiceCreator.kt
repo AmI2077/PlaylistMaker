@@ -4,7 +4,6 @@ import android.content.Context
 import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.search.data.mapper.TrackMapperImpl
 import com.example.playlistmaker.search.data.network.RetrofitClient
 import com.example.playlistmaker.search.data.repository.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.repository.TracksRepositoryImpl
@@ -22,11 +21,11 @@ import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
 import com.example.playlistmaker.sharing.data.ResourceClientImpl
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.example.playlistmaker.sharing.domain.interfaces.SharingInteractor
+import com.google.gson.Gson
 
 object ServiceCreator {
 
     private val networkClient = RetrofitClient
-    private val trackMapper = TrackMapperImpl
 
     fun getThemeInteractor(context: Context): ThemeInteractor {
         return ThemeInteractorImpl(
@@ -40,17 +39,24 @@ object ServiceCreator {
     }
 
     private fun getTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(networkClient, trackMapper)
+        return TracksRepositoryImpl(networkClient)
     }
 
     private fun getSearchHistoryRepository(context: Context): SearchHistoryRepository {
-        return SearchHistoryRepositoryImpl(PrefsStorageClient(context))
+        return SearchHistoryRepositoryImpl(
+            PrefsStorageClient(
+                sharedPreferences = context.getSharedPreferences(
+                    PrefsStorageClient.SEARCH_HISTORY_PREFERENCES,
+                    Context.MODE_PRIVATE
+                ),
+                gson = Gson()
+            )
+        )
     }
 
     private fun getMediaPlayer(): MediaPlayer {
         return MediaPlayer()
     }
-
 
     fun createSettingsViewModelFactory(context: Context): ViewModelProvider.Factory {
         return object : ViewModelProvider.Factory {
@@ -67,7 +73,6 @@ object ServiceCreator {
             }
         }
     }
-
 
     fun createPlayerViewModelFactory(): ViewModelProvider.Factory {
         return object: ViewModelProvider.Factory {

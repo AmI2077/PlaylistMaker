@@ -1,6 +1,4 @@
-package com.example.playlistmaker.search.ui.states
-
-import com.example.playlistmaker.search.domain.models.Track
+package com.example.playlistmaker.search.domain.models
 
 sealed class SearchState {
     object Idle: SearchState()

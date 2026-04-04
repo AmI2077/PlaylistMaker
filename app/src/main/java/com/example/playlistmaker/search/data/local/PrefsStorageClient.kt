@@ -1,27 +1,24 @@
 package com.example.playlistmaker.search.data.local
 
-import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 
-class PrefsStorageClient(context: Context): StorageClient<List<Track>> {
-
-    private val sharedPrefs = context.getSharedPreferences(
-        SEARCH_HISTORY_PREFERENCES, Context.MODE_PRIVATE
-    )
-
-    private val gson = Gson()
+class PrefsStorageClient(
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson,
+): StorageClient<List<Track>> {
 
     override fun storeData(data: List<Track>) {
         val json = gson.toJson(data)
-        sharedPrefs.edit {
+        sharedPreferences.edit {
             putString(SEARCH_HISTORY, json)
         }
     }
 
     override fun getData(): List<Track> {
-        val json = sharedPrefs.getString(SEARCH_HISTORY, null)
+        val json = sharedPreferences.getString(SEARCH_HISTORY, null)
         return if (json == null) {
             emptyList()
         } else {
@@ -30,7 +27,7 @@ class PrefsStorageClient(context: Context): StorageClient<List<Track>> {
     }
 
     override fun clearData() {
-        sharedPrefs.edit {
+        sharedPreferences.edit {
             clear()
         }
     }

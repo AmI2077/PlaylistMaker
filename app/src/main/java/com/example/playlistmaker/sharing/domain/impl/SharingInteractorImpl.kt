@@ -1,6 +1,6 @@
 package com.example.playlistmaker.sharing.domain.impl
 
-import com.example.playlistmaker.sharing.data.ExternalNavigator
+import com.example.playlistmaker.sharing.domain.interfaces.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.interfaces.SharingInteractor
 
 class SharingInteractorImpl(

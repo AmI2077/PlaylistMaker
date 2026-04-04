@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
@@ -40,7 +41,7 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityTrackBinding.inflate(layoutInflater)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_track)
+        setContentView(binding.root)
 
         setupClickListeners()
         setTrackInfo(getTrackInfo(intent))
@@ -88,6 +89,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun setTrackInfo(track: Track?) {
+        Log.d("track", track.toString())
         if (track != null) {
             playerViewModel.setUrl(track.previewUrl)
             setImage(track.artworkUrl100, binding.trackArtwork)
@@ -104,7 +106,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun setImage(uri: String, view: ImageView) {
-        Glide.with(applicationContext)
+        Glide.with(this)
             .load(uri.replaceAfterLast("/", "512x512bb.jpg"))
             .centerCrop()
             .transform(RoundedCorners(DimensionsUtils.Companion.dpToPixel(8f, applicationContext)))
