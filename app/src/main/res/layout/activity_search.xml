@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    tools:context=".ui.searchScreen.SearchActivity">
+    tools:context=".search.ui.SearchActivity">
 
     <!--region гайдлайны-->
     <androidx.constraintlayout.widget.Guideline
@@ -38,13 +38,24 @@
         app:layout_constraintGuide_end="16dp" />
     <!--endregion-->
 
+    <ImageView
+        android:id="@+id/back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/back"
+        android:src="@drawable/ic_close_screen_24"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintBottom_toBottomOf="@id/searchTextView"
+        app:layout_constraintTop_toTopOf="@id/searchTextView"/>
+
     <TextView
         android:id="@+id/searchTextView"
         style="@style/headerTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24.dp"
         android:text="@string/search"
-        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintStart_toEndOf="@id/back_btn"
         app:layout_constraintTop_toTopOf="@id/topGuideline" />
 
     <!--region строка поиска-->
