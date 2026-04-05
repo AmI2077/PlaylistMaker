@@ -5,7 +5,6 @@ import android.os.Handler
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -14,7 +13,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.di.ServiceCreator
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.SearchHistoryState
 import com.example.playlistmaker.search.domain.models.SearchScreenUiState
@@ -22,14 +20,13 @@ import com.example.playlistmaker.search.domain.models.SearchState
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.ui.tracksRecycler.TracksAdapter
 import kotlinx.coroutines.Runnable
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
 
-    private val viewModel: SearchViewModel by viewModels {
-        ServiceCreator.createSearchViewModelFactory(applicationContext)
-    }
+    private val viewModel: SearchViewModel by viewModel()
 
     private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) {
         Handler(mainLooper)
