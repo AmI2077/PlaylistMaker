@@ -2,15 +2,24 @@ package com.example.playlistmaker.main
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.di.appModule
+import com.example.playlistmaker.settings.data.THEME_PREFERENCES
 import com.example.playlistmaker.settings.data.ThemeRepositoryImpl
 import com.example.playlistmaker.settings.ui.ThemeState
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
 
+        startKoin {
+            androidContext(this@App)
+            modules(appModule)
+        }
+
         val isDarkTheme =
-            getSharedPreferences(ThemeRepositoryImpl.THEME_PREFERENCES, MODE_PRIVATE)
+            getSharedPreferences(THEME_PREFERENCES, MODE_PRIVATE)
                 .getBoolean(ThemeRepositoryImpl.DARK_THEME, false)
 
         initTheme(isDarkTheme)

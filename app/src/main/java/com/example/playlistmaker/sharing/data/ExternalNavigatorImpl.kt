@@ -20,7 +20,7 @@ class ExternalNavigatorImpl(
         context.startActivity(
             Intent.createChooser(
                 shareIntent, null
-            )
+            ).addActivityFlag()
         )
     }
 
@@ -31,7 +31,7 @@ class ExternalNavigatorImpl(
             putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.emailAddress))
             putExtra(Intent.EXTRA_SUBJECT, emailData.themeMessage)
             putExtra(Intent.EXTRA_TEXT, emailData.message)
-        }
+        }.addActivityFlag()
         if (emailIntent.resolveActivity(context.packageManager) != null) {
             context.startActivity(emailIntent)
         } else {
@@ -41,8 +41,13 @@ class ExternalNavigatorImpl(
 
     override fun openTerms() {
         val url = resourceClient.getTermsUrl()
-        val termsIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-
+        val termsIntent = Intent(Intent.ACTION_VIEW, url.toUri()).addActivityFlag()
         context.startActivity(termsIntent)
+    }
+}
+
+private fun Intent.addActivityFlag(): Intent {
+    return apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
 }
