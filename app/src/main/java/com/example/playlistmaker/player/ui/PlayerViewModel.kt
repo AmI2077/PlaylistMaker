@@ -1,20 +1,20 @@
 package com.example.playlistmaker.player.ui
 
-import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.player.domain.AudioPlayer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
-    private val mediaPlayer: MediaPlayer
+    private val audioPlayer: AudioPlayer
 ): ViewModel() {
     private var playUrl = ""
-    private var isPrepared = false
     private var timerJob: Job? = null
+    private var isPlaying: Boolean = false
 
     private var _playTime = MutableLiveData<Int>()
     val playTime: LiveData<Int> get() = _playTime
@@ -28,7 +28,7 @@ class PlayerViewModel(
 
     fun setUrl(url: String) {
         playUrl = url
-        if (!isPrepared) prepareMediaPlayer(playUrl)
+        prepareMediaPlayer(playUrl)
     }
 
     fun initState() {
@@ -36,26 +36,24 @@ class PlayerViewModel(
         _playState.value = PlayState.Idle
     }
 
-    private fun releaseMediaPlayer() {
-        mediaPlayer.release()
+    private fun closePlayer() {
+        timerJob?.cancel()
+        audioPlayer.close()
     }
 
     private fun prepareMediaPlayer(playUrl: String) {
-        mediaPlayer.setDataSource(playUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnCompletionListener {
+        audioPlayer.preparePlayer(playUrl) {
             initState()
         }
-        isPrepared = true
     }
 
     fun start() {
-        timerJob?.cancel()
-        mediaPlayer.start()
+        audioPlayer.play()
+        isPlaying = true
         _playState.value = PlayState.Play
         timerJob = viewModelScope.launch {
-            while (mediaPlayer.isPlaying) {
-                _playTime.postValue(mediaPlayer.currentPosition)
+            while (isPlaying) {
+                _playTime.postValue(audioPlayer.getCurrentPosition())
                 delay(TIMER_DELAY)
             }
         }
@@ -63,12 +61,13 @@ class PlayerViewModel(
 
     fun pause() {
         timerJob?.cancel()
-        mediaPlayer.pause()
+        isPlaying = false
+        audioPlayer.pause()
         _playState.value = PlayState.Pause
     }
 
     override fun onCleared() {
-        releaseMediaPlayer()
+        closePlayer()
     }
 
     companion object {

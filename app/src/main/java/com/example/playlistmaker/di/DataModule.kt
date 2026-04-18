@@ -1,6 +1,9 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
+import android.media.MediaPlayer
+import com.example.playlistmaker.player.data.AudioPlayerImpl
+import com.example.playlistmaker.player.domain.AudioPlayer
 import com.example.playlistmaker.search.data.local.PrefsStorageClient
 import com.example.playlistmaker.search.data.local.StorageClient
 import com.example.playlistmaker.search.data.network.NetworkClient
@@ -36,6 +39,14 @@ val dataModule = module {
     single {
         ResourceClientImpl(androidContext())
     } bind ResourceClient::class
+
+    single {
+        AudioPlayerImpl(get())
+    } bind AudioPlayer::class
+
+    single {
+        MediaPlayer()
+    }
 
     single {
         Gson()
