@@ -12,8 +12,7 @@ class LibraryViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifec
     override fun createFragment(position: Int): Fragment =
         when (position) {
             0 -> FavouriteTracksFragment.newInstance()
-            1 -> PlaylistsFragment.newInstance()
-            else -> FavouriteTracksFragment.newInstance()
+            else -> PlaylistsFragment.newInstance()
         }
 
     override fun getItemCount(): Int = 2

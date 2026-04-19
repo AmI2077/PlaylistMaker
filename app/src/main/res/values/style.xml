@@ -81,6 +81,7 @@
 
     <style name="tabLayoutStyle">
         <item name="tabIndicatorColor">?attr/colorSecondary</item>
+        <item name="tabTextColor">?attr/colorSecondary</item>
         <item name="tabIndicatorFullWidth">false</item>
         <item name="tabIndicatorHeight">2dp</item>
     </style>
