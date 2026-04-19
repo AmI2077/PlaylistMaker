@@ -1,6 +1,7 @@
 package com.example.playlistmaker.di
 
-import android.media.MediaPlayer
+import com.example.playlistmaker.library.ui.viewmodels.FavouriteTracksViewModel
+import com.example.playlistmaker.library.ui.viewmodels.PlaylistsViewModel
 import com.example.playlistmaker.player.ui.PlayerViewModel
 import com.example.playlistmaker.search.ui.SearchViewModel
 import com.example.playlistmaker.settings.ui.SettingsViewModel
@@ -17,7 +18,10 @@ val vmModule = module {
     viewModel {
         PlayerViewModel(get())
     }
-    factory {
-        MediaPlayer()
+    viewModel {
+        FavouriteTracksViewModel()
+    }
+    viewModel {
+        PlaylistsViewModel()
     }
 }
