@@ -1,6 +1,7 @@
 package com.example.playlistmaker.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -39,7 +40,9 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.playerFragment -> {
                     binding.bottomNavView.menu.findItem(R.id.searchFragment).isChecked = true
+                    binding.bottomNavView.visibility = View.GONE
                 }
+                else ->  binding.bottomNavView.visibility = View.VISIBLE
             }
         }
     }
