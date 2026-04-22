@@ -3,54 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="?attr/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/activity_main_bg"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/horizontalScreenPadding"
-    android:paddingVertical="@dimen/verticalScreenPadding"
     tools:context=".main.MainActivity">
 
-    <TextView
-        style="@style/headerTextStyle"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/nav_graph"
+        app:defaultNavHost="true" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?attr/colorOutline"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/playlist_maker"
-        android:textColor="@color/white" />
-
-    <Button
-        android:id="@+id/search_btn"
-        style="@style/mainMenuBtnStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="40dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:text="@string/search"
-        app:icon="@drawable/ic_search_24" />
-
-    <Button
-        android:id="@+id/library_btn"
-        style="@style/mainMenuBtnStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:drawableStart="@drawable/ic_search_24"
-        android:text="@string/library"
-        app:icon="@drawable/ic_library_24" />
-
-    <Button
-        android:id="@+id/settings_btn"
-        style="@style/mainMenuBtnStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:drawableStart="@drawable/ic_search_24"
-        android:text="@string/settings"
-        app:icon="@drawable/ic_settings_24" />
-
+        android:background="?attr/colorPrimary"
+        app:menu="@menu/bottom_nav_view"
+        app:itemTextAppearanceActive="@style/bottomNavTextStyle"
+        app:itemTextAppearanceInactive="@style/bottomNavTextStyle"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        />
 </LinearLayout>

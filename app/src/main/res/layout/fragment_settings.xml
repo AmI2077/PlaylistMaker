@@ -1,33 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    android:orientation="vertical"
     android:paddingHorizontal="@dimen/horizontalScreenPadding"
     android:paddingVertical="@dimen/verticalScreenPadding"
-    tools:context=".settings.ui.SettingsActivity">
+    android:orientation="vertical"
+    tools:context=".settings.ui.SettingsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/back"
-            android:src="@drawable/ic_close_screen_24" />
-
         <TextView
             style="@style/headerTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
             android:text="@string/settings" />
     </LinearLayout>
 
@@ -119,4 +110,5 @@
             android:contentDescription="@string/forward"
             android:src="@drawable/ic_forward_24" />
     </LinearLayout>
+
 </LinearLayout>

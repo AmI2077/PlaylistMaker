@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -38,14 +39,23 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
 
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.recyclerview)
     val koinVer = "3.5.3"
+    val navVersion = "2.9.7"
 
     implementation("io.insert-koin:koin-core:$koinVer")
     implementation("io.insert-koin:koin-android:$koinVer")
+
+    implementation ("androidx.navigation:navigation-fragment:$navVersion")
+    implementation ("androidx.navigation:navigation-ui:$navVersion")
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
