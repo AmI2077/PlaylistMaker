@@ -1,24 +1,21 @@
 package com.example.playlistmaker.player.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityTrackBinding
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.utils.DimensionsUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,41 +23,53 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.util.Locale
+import kotlin.getValue
 
-class PlayerActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityTrackBinding
+class PlayerFragment : Fragment() {
+
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding get() = _binding!!
 
     private val playerViewModel: PlayerViewModel by viewModel()
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private val args: PlayerFragmentArgs by navArgs()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityTrackBinding.inflate(layoutInflater)
-        enableEdgeToEdge()
-        setContentView(binding.root)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         setupClickListeners()
-        setTrackInfo(getTrackInfo(intent))
+        setTrackInfo(getTrackInfo())
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        playerViewModel.playState.observe(this) { state ->
+        playerViewModel.playState.observe(viewLifecycleOwner) { state ->
             render(state)
         }
-        playerViewModel.playTime.observe(this) { time ->
+        playerViewModel.playTime.observe(viewLifecycleOwner) { time ->
             setTrackTime(time)
         }
+    }
 
-        lifecycle.addObserver(object: DefaultLifecycleObserver {
-            override fun onStop(owner: LifecycleOwner) {
-                playerViewModel.pause()
-            }
-        })
+    override fun onStop() {
+        super.onStop()
+        playerViewModel.pause()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setTrackTime(time: Int) {
@@ -85,6 +94,7 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+
     private fun setTrackInfo(track: Track?) {
         Log.d("track", track.toString())
         if (track != null) {
@@ -106,19 +116,19 @@ class PlayerActivity : AppCompatActivity() {
         Glide.with(this)
             .load(uri.replaceAfterLast("/", "512x512bb.jpg"))
             .centerCrop()
-            .transform(RoundedCorners(DimensionsUtils.Companion.dpToPixel(8f, applicationContext)))
+            .transform(RoundedCorners(DimensionsUtils.Companion.dpToPixel(8f, requireContext())))
             .placeholder(R.drawable.ic_placeholder_312)
             .into(view)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun getTrackInfo(intent: Intent): Track? {
-        return intent.getParcelableExtra(TRACK_INFO_KEY, Track::class.java)
+    private fun getTrackInfo(): Track? {
+        return args.track
     }
 
     private fun setupClickListeners() {
         binding.backBtn.setOnClickListener {
-            finish()
+            findNavController().popBackStack()
         }
         binding.playBtn.setOnClickListener {
             onPlayBtnClick()
@@ -136,13 +146,4 @@ class PlayerActivity : AppCompatActivity() {
         playerViewModel.pause()
     }
 
-    companion object {
-        fun createIntent(context: Context, track: Track): Intent {
-            val intent = Intent(context, PlayerActivity::class.java)
-            intent.putExtra(TRACK_INFO_KEY, track)
-            return intent
-        }
-
-        const val TRACK_INFO_KEY = "track_info"
-    }
 }

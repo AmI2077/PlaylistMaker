@@ -27,6 +27,7 @@ class FavouriteTracksFragment : Fragment() {
             render(it)
         }
 
+
         return binding.root
     }
 

@@ -12,6 +12,7 @@ class AudioPlayerImpl(
         onCompletion: () -> Unit
     ) {
         mediaPlayer.apply {
+            mediaPlayer.reset()
             setDataSource(playUrl)
             prepareAsync()
             setOnCompletionListener {

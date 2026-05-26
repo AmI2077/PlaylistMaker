@@ -8,6 +8,7 @@
         <item name="tabTextColor">@color/yp_black</item>
         <item name="android:textColorHint">@color/yp_text_gray</item>
         <item name="colorSecondary">@color/yp_black</item>
+        <item name="colorOutline">@color/yp_light_gray</item>
         <item name="colorPrimary">@color/white</item>
         <item name="colorAccent">@color/yp_black</item>
         <item name="colorOnSecondary">@color/yp_text_gray</item>
