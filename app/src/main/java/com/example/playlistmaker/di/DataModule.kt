@@ -13,6 +13,7 @@ import com.example.playlistmaker.sharing.data.ResourceClientImpl
 import com.example.playlistmaker.sharing.domain.interfaces.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.interfaces.ResourceClient
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -25,6 +26,7 @@ val dataModule = module {
     single {
         PrefsStorageClient(
             sharedPreferences = androidContext().getSharedPreferences(SEARCH_HISTORY_PREFERENCES, Context.MODE_PRIVATE),
+            get(),
             get()
         )
     } bind StorageClient::class
@@ -50,6 +52,10 @@ val dataModule = module {
 
     single {
         Gson()
+    }
+
+    single {
+        Dispatchers.IO
     }
 }
 

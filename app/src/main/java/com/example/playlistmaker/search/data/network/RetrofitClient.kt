@@ -20,15 +20,9 @@ object RetrofitClient : NetworkClient {
 
     override suspend fun requestTracks(trackRequestDto: TrackRequestDto): ResponseResultDto =
         try {
-            val response = tracksApi.getTracksByQuery(trackRequestDto.query)
-            ResponseResultDto.Success(
-                data = TrackResponseDto(
-                    response.body()?.resultCount ?: 0,
-                    response.body()?.results ?: emptyList<TrackDto>()
-                )
-            )
+            val result = tracksApi.getTracksByQuery(trackRequestDto.query)
+            ResponseResultDto.Success(data = result)
         } catch (e: Exception) {
-            e.printStackTrace()
-            ResponseResultDto.Failure
+            ResponseResultDto.Failure(e.message.toString())
         }
 }

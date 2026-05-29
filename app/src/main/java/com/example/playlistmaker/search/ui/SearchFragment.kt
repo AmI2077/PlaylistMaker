@@ -4,22 +4,27 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.Observer
+import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.search.domain.models.SearchHistoryState
-import com.example.playlistmaker.search.domain.models.SearchScreenUiState
-import com.example.playlistmaker.search.domain.models.SearchState
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.state.SearchError
+import com.example.playlistmaker.search.ui.state.SearchScreenIntent
+import com.example.playlistmaker.search.ui.state.SearchScreenUiState
 import com.example.playlistmaker.search.ui.tracksRecycler.TracksAdapter
-import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
@@ -30,12 +35,8 @@ class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModel()
 
-    private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) {
-        Handler(Looper.getMainLooper())
-    }
-
-    private var searchRunnable: Runnable? = null
-    private lateinit var tracksAdapter: TracksAdapter
+    private lateinit var searchTracksAdapter: TracksAdapter
+    private lateinit var historyTracksAdapter: TracksAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,8 +54,6 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.initState()
-        viewModel.userQuery.observe(viewLifecycleOwner, setupEditTextObserver())
         viewModel.screenState.observe(viewLifecycleOwner) { state ->
             render(state)
         }
@@ -69,78 +68,56 @@ class SearchFragment : Fragment() {
         _binding = null
     }
 
-
     private fun render(state: SearchScreenUiState) {
+        val currentQuery = state.userQuery
+
+        setClearBtnVisibility(currentQuery)
+
+        if (binding.editText.text.toString() != currentQuery) {
+            binding.editText.setText(currentQuery)
+            binding.editText.setSelection(currentQuery.length)
+        }
+
         hideViews()
-        if (state.historyVisibility) {
-            when (state.historyState) {
-                SearchHistoryState.EmptyHistory -> binding.searchHistoryView.visibility = View.GONE
-                is SearchHistoryState.History -> {
-                    tracksAdapter.submitList(state.historyState.searchedTracks)
-                    binding.searchHistoryView.visibility = View.VISIBLE
+
+        when {
+            state.loading -> {
+                binding.loading.visibility = View.VISIBLE
+            }
+            state.error != null -> {
+                when(state.error) {
+                    SearchError.EmptyResult -> binding.emptyResultView.visibility = View.VISIBLE
+                    SearchError.NetworkError -> binding.networkErrorView.visibility = View.VISIBLE
                 }
             }
-        }
-        when (state.searchState) {
-            SearchState.EmptyResult ->  binding.emptyResultView.visibility = View.VISIBLE
-            is SearchState.Error ->  binding.emptyResultView.visibility = View.VISIBLE
-            SearchState.Idle -> {}
-            SearchState.Loading -> binding.loading.visibility = View.VISIBLE
-            SearchState.NetworkError -> binding.networkErrorView.visibility = View.VISIBLE
-            is SearchState.Success -> {
-                tracksAdapter.submitList(state.searchState.tracks)
+            state.historyVisible -> {
+                historyTracksAdapter.submitList(state.historyTracks.orEmpty())
+                binding.searchHistoryView.visibility = View.VISIBLE
+            }
+            state.searchedTracks != null -> {
+                searchTracksAdapter.submitList(state.searchedTracks)
                 binding.tracksRecycler.visibility = View.VISIBLE
             }
         }
     }
 
-    private fun setupEditTextObserver(): Observer<String> {
-        return Observer<String> { query ->
-            setClearBtnVisibility(query)
-            viewModel.onQueryChanged(query)
-        }
-    }
-
     private fun setEditText() {
         binding.editText.requestFocus()
-        binding.editText.setText(viewModel.userQuery.value)
         binding.editText.doOnTextChanged { s, p1, p2, p3 ->
-            searchRunnable?.let { mainHandler.removeCallbacks(it) }
-            searchRunnable = getSearchRunnable(s.toString())
-            viewModel.setUserQuery(s.toString())
-            searchRunnable?.let { mainHandler.postDelayed(it, SEARCH_DELAY)}
+            viewModel.onIntent(SearchScreenIntent.Search(s.toString()))
         }
     }
-
-    private fun getSearchRunnable(s: String): Runnable {
-        return kotlinx.coroutines.Runnable {
-            if (!s.toString().isEmpty()) loadTracks(s.toString())
-        }
-    }
-
-    private fun loadTracks(query: String) {
-        viewModel.getTracksByQuery(query)
-    }
-
     private fun onTrackClick(track: Track) {
-        viewModel.addTrackToHistory(track)
-        if (clickDebounce()) {
+        lifecycleScope.launch {
+            delay(TRACK_CLICK_DELAY)
+            viewModel.onIntent(SearchScreenIntent.TrackClick(track))
             val action = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
             findNavController().navigate(action)
         }
     }
 
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (current) {
-            isClickAllowed = false
-            mainHandler.postDelayed({isClickAllowed = true}, TRACK_CLICK_DELAY)
-        }
-        return current
-    }
-
     private fun onHistoryClearBtnClick() {
-        viewModel.clearSearchHistory()
+        viewModel.onIntent(SearchScreenIntent.ClearHistory)
     }
 
     private fun onMainViewClick() {
@@ -149,10 +126,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun onClearSearchBtnClick() {
-        binding.editText.setText("")
         binding.editText.clearFocus()
-        viewModel.onClearSearchBar()
-
+        viewModel.onIntent(SearchScreenIntent.ClearSearch)
         hideKeyboard()
     }
 
@@ -165,23 +140,21 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        tracksAdapter = TracksAdapter(
-            onItemClick = { track ->
-                onTrackClick(track)
-            }
-        )
+        searchTracksAdapter = TracksAdapter { track -> onTrackClick(track) }
         binding.tracksRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.tracksRecycler.adapter = tracksAdapter
+        binding.tracksRecycler.adapter = searchTracksAdapter
 
-        binding.historySearchRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.historySearchRecycler.adapter = tracksAdapter
+        historyTracksAdapter = TracksAdapter { track -> onTrackClick(track) }
+        binding.historySearchRecycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.historySearchRecycler.adapter = historyTracksAdapter
     }
 
     private fun setupClickListeners() {
         binding.main.setOnClickListener { onMainViewClick() }
         binding.clearSearchBtn.setOnClickListener { onClearSearchBtnClick() }
-        binding.refreshBtn.setOnClickListener { viewModel.getTracksByQuery(viewModel.userQuery.value!!) }
+        binding.refreshBtn.setOnClickListener { viewModel.onIntent(SearchScreenIntent.RefreshSearch) }
         binding.clearHistoryBtn.setOnClickListener { onHistoryClearBtnClick() }
     }
 
@@ -199,8 +172,6 @@ class SearchFragment : Fragment() {
     }
 
     companion object {
-        const val SEARCH_DELAY = 2000L
         const val TRACK_CLICK_DELAY = 1000L
-        var isClickAllowed = true
     }
 }

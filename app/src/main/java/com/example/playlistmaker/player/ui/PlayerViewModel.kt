@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.AudioPlayer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
@@ -14,13 +15,12 @@ class PlayerViewModel(
 ): ViewModel() {
     private var playUrl = ""
     private var timerJob: Job? = null
-    private var isPlaying: Boolean = false
 
     private var _playTime = MutableLiveData<Int>()
-    val playTime: LiveData<Int> get() = _playTime
+    val playTime: LiveData<Int> = _playTime
 
     private var _playState = MutableLiveData<PlayState>()
-    val playState: LiveData<PlayState> get() = _playState
+    val playState: LiveData<PlayState> = _playState
 
     init {
         initState()
@@ -32,7 +32,8 @@ class PlayerViewModel(
     }
 
     fun initState() {
-        _playTime.postValue(0)
+        timerJob?.cancel()
+        _playTime.value = 0
         _playState.value = PlayState.Idle
     }
 
@@ -49,19 +50,17 @@ class PlayerViewModel(
 
     fun start() {
         audioPlayer.play()
-        isPlaying = true
         _playState.value = PlayState.Play
         timerJob = viewModelScope.launch {
-            while (isPlaying) {
-                _playTime.postValue(audioPlayer.getCurrentPosition())
+            while (isActive) {
                 delay(TIMER_DELAY)
+                _playTime.value = audioPlayer.getCurrentPosition()
             }
         }
     }
 
     fun pause() {
         timerJob?.cancel()
-        isPlaying = false
         audioPlayer.pause()
         _playState.value = PlayState.Pause
     }
@@ -71,6 +70,6 @@ class PlayerViewModel(
     }
 
     companion object {
-        const val TIMER_DELAY = 500L
+        const val TIMER_DELAY = 300L
     }
 }
