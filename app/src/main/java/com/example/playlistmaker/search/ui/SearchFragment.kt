@@ -103,9 +103,11 @@ class SearchFragment : Fragment() {
     }
     private fun onTrackClick(track: Track) {
         if (isClickAllowed) {
-                viewModel.onIntent(SearchScreenIntent.TrackClick(track))
-                val action = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
-                findNavController().navigate(action)
+            isClickAllowed = false
+
+            viewModel.onIntent(SearchScreenIntent.TrackClick(track))
+            val action = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
+            findNavController().navigate(action)
             viewLifecycleOwner.lifecycleScope.launch {
                 delay(TRACK_CLICK_DELAY)
                 isClickAllowed = true
