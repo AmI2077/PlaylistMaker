@@ -13,11 +13,11 @@ class SearchHistoryRepositoryImpl(
         emit(storageClient.getData())
     }
 
-    override suspend fun saveSearchHistory(tracks: List<Track>) {
+    override fun saveSearchHistory(tracks: List<Track>) {
         storageClient.storeData(tracks)
     }
 
-    override suspend fun clearSearchHistory() {
+    override fun clearSearchHistory() {
         storageClient.clearData()
     }
 }

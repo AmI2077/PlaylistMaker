@@ -2,22 +2,16 @@ package com.example.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.state.SearchError
 import com.example.playlistmaker.search.ui.state.SearchScreenIntent
@@ -108,11 +102,14 @@ class SearchFragment : Fragment() {
         }
     }
     private fun onTrackClick(track: Track) {
-        lifecycleScope.launch {
-            delay(TRACK_CLICK_DELAY)
-            viewModel.onIntent(SearchScreenIntent.TrackClick(track))
-            val action = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
-            findNavController().navigate(action)
+        if (isClickAllowed) {
+                viewModel.onIntent(SearchScreenIntent.TrackClick(track))
+                val action = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
+                findNavController().navigate(action)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(TRACK_CLICK_DELAY)
+                isClickAllowed = true
+            }
         }
     }
 
@@ -172,6 +169,7 @@ class SearchFragment : Fragment() {
     }
 
     companion object {
+        var isClickAllowed = true
         const val TRACK_CLICK_DELAY = 1000L
     }
 }
