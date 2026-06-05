@@ -10,5 +10,5 @@ interface TracksApiService {
     @GET("/search?entity=song")
     suspend fun getTracksByQuery(
         @Query("term") query: String
-    ) : Response<TrackResponseDto>
+    ) : TrackResponseDto
 }

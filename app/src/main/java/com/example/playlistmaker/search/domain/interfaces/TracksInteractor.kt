@@ -1,13 +1,13 @@
 package com.example.playlistmaker.search.domain.interfaces
 
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.domain.models.SearchHistoryState
-import com.example.playlistmaker.search.domain.models.SearchState
+import com.example.playlistmaker.search.domain.models.SearchResult
+import kotlinx.coroutines.flow.Flow
 
 interface TracksInteractor {
 
-    suspend fun searchTracksByQuery(query: String): SearchState
-    suspend fun getSearchHistory(): SearchHistoryState
-    suspend fun addTrackToHistory(track: Track): SearchHistoryState
-    suspend fun clearSearchHistory(): SearchHistoryState
+    fun searchTracksByQuery(query: String): Flow<SearchResult>
+    fun getSearchHistory(): Flow<List<Track>>
+    suspend fun addTrackToHistory(track: Track): List<Track>
+    suspend fun clearSearchHistory()
 }

@@ -1,9 +1,8 @@
 package com.example.playlistmaker.search.data.network
 
 import com.example.playlistmaker.search.data.dto.ResponseResultDto
-import com.example.playlistmaker.search.data.dto.TrackDto
 import com.example.playlistmaker.search.data.dto.TrackRequestDto
-import com.example.playlistmaker.search.data.dto.TrackResponseDto
+import kotlinx.coroutines.CancellationException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -20,15 +19,11 @@ object RetrofitClient : NetworkClient {
 
     override suspend fun requestTracks(trackRequestDto: TrackRequestDto): ResponseResultDto =
         try {
-            val response = tracksApi.getTracksByQuery(trackRequestDto.query)
-            ResponseResultDto.Success(
-                data = TrackResponseDto(
-                    response.body()?.resultCount ?: 0,
-                    response.body()?.results ?: emptyList<TrackDto>()
-                )
-            )
+            val result = tracksApi.getTracksByQuery(trackRequestDto.query)
+            ResponseResultDto.Success(data = result)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            e.printStackTrace()
-            ResponseResultDto.Failure
+            ResponseResultDto.Failure(e.message.toString())
         }
 }

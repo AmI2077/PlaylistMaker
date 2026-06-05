@@ -25,7 +25,7 @@ val dataModule = module {
     single {
         PrefsStorageClient(
             sharedPreferences = androidContext().getSharedPreferences(SEARCH_HISTORY_PREFERENCES, Context.MODE_PRIVATE),
-            get()
+            get(),
         )
     } bind StorageClient::class
 
