@@ -1,9 +1,7 @@
 package com.example.playlistmaker.library.ui.model
 
-sealed interface LibraryUiState {
+import com.example.playlistmaker.search.domain.models.Track
 
-    object Content: LibraryUiState
-    object Loading: LibraryUiState
-    object Empty: LibraryUiState
-    object Error: LibraryUiState
-}
+data class LibraryUiState(
+    val tracks: List<Track> = emptyList()
+)
