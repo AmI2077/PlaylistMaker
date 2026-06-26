@@ -6,6 +6,11 @@
     android:background="?attr/colorPrimary"
     tools:context=".library.ui.fragments.FavouriteTracksFragment">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favouriteTracksRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <LinearLayout
         android:id="@+id/emptyErrorView"
         android:layout_width="wrap_content"

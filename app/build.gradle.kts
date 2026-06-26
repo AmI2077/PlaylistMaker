@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -50,12 +51,17 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     val koinVer = "3.5.3"
     val navVersion = "2.9.7"
+    val roomVersion = "2.8.4"
 
     implementation("io.insert-koin:koin-core:$koinVer")
     implementation("io.insert-koin:koin-android:$koinVer")
 
     implementation ("androidx.navigation:navigation-fragment:$navVersion")
     implementation ("androidx.navigation:navigation-ui:$navVersion")
+
+    implementation("androidx.room:room-ktx:${roomVersion}")
+    implementation("androidx.room:room-runtime:${roomVersion}")
+    ksp("androidx.room:room-compiler:$roomVersion")
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)

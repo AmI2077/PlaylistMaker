@@ -1,7 +1,7 @@
 package com.example.playlistmaker.player.data
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.player.domain.AudioPlayer
+import com.example.playlistmaker.player.domain.api.AudioPlayer
 
 class AudioPlayerImpl(
     private val mediaPlayer: MediaPlayer,
@@ -34,5 +34,4 @@ class AudioPlayerImpl(
     override fun close() {
         mediaPlayer.reset()
     }
-
 }

@@ -1,6 +1,10 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
+import com.example.playlistmaker.library.data.repository.FavTracksRepositoryImpl
+import com.example.playlistmaker.library.domain.api.FavTracksRepository
+import com.example.playlistmaker.player.data.repository.PlayerRepositoryImpl
+import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.search.data.repository.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.repository.TracksRepositoryImpl
 import com.example.playlistmaker.search.domain.interfaces.SearchHistoryRepository
@@ -13,6 +17,14 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val repositoryModule = module {
+    single {
+        FavTracksRepositoryImpl(get())
+    } bind FavTracksRepository::class
+
+    single {
+        PlayerRepositoryImpl(get())
+    } bind PlayerRepository::class
+
     single {
         TracksRepositoryImpl(get())
     } bind TracksRepository::class

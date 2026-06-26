@@ -1,7 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -47,24 +45,20 @@ class PlayerFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupClickListeners()
-        setTrackInfo(getTrackInfo())
+        setTrackInfo(args.track)
 
-        playerViewModel.playState.observe(viewLifecycleOwner) { state ->
-            render(state)
-        }
-        playerViewModel.playTime.observe(viewLifecycleOwner) { time ->
-            setTrackTime(time)
+        playerViewModel.state.observe(viewLifecycleOwner) {
+            render(it)
         }
     }
 
     override fun onStop() {
         super.onStop()
-        playerViewModel.pause()
+        playerViewModel.onIntent(PlayerIntent.Pause)
     }
 
     override fun onDestroyView() {
@@ -77,20 +71,21 @@ class PlayerFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun render(state: PlayState) {
-        when(state) {
-            PlayState.Idle -> {
-                binding.playBtn.visibility = View.VISIBLE
-                binding.pauseBtn.visibility = View.GONE
-            }
-            PlayState.Pause -> {
-                binding.playBtn.visibility = View.VISIBLE
-                binding.pauseBtn.visibility = View.GONE
-            }
-            PlayState.Play -> {
-                binding.playBtn.visibility = View.GONE
-                binding.pauseBtn.visibility = View.VISIBLE
-            }
+    private fun render(state: PlayerUiState) {
+        setTrackTime(state.playTime)
+
+        if (state.isLiked) {
+            binding.addToFavBtn.setImageResource(R.drawable.ic_fav_24)
+        } else {
+            binding.addToFavBtn.setImageResource(R.drawable.ic_add_to_fav_btn_51)
+        }
+
+        if (state.isPlaying) {
+            binding.playBtn.visibility = View.GONE
+            binding.pauseBtn.visibility = View.VISIBLE
+        } else {
+            binding.playBtn.visibility = View.VISIBLE
+            binding.pauseBtn.visibility = View.GONE
         }
     }
 
@@ -98,7 +93,7 @@ class PlayerFragment : Fragment() {
     private fun setTrackInfo(track: Track?) {
         Log.d("track", track.toString())
         if (track != null) {
-            playerViewModel.setUrl(track.previewUrl)
+            playerViewModel.onIntent(PlayerIntent.LoadTrack(url = track.previewUrl, id = track.trackId))
             setImage(track.artworkUrl100, binding.trackArtwork)
             binding.trackName.text = track.trackName
             binding.artistName.text = track.artistName
@@ -121,11 +116,6 @@ class PlayerFragment : Fragment() {
             .into(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun getTrackInfo(): Track? {
-        return args.track
-    }
-
     private fun setupClickListeners() {
         binding.backBtn.setOnClickListener {
             findNavController().popBackStack()
@@ -136,14 +126,20 @@ class PlayerFragment : Fragment() {
         binding.pauseBtn.setOnClickListener {
             onPauseBtnClick()
         }
+        binding.addToFavBtn.setOnClickListener {
+            onFavBtnClick(args.track)
+        }
     }
 
     private fun onPlayBtnClick() {
-        playerViewModel.start()
+        playerViewModel.onIntent(PlayerIntent.Play)
     }
 
     private fun onPauseBtnClick() {
-        playerViewModel.pause()
+        playerViewModel.onIntent(PlayerIntent.Pause)
     }
 
+    private fun onFavBtnClick(track: Track) {
+        playerViewModel.onIntent(PlayerIntent.FavBtnClick(track))
+    }
 }
