@@ -1,21 +1,27 @@
 package com.example.playlistmaker.player.ui
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import com.example.playlistmaker.player.ui.addtoplaylist.AddTrackBottomSheetFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.utils.DimensionsUtils
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -29,9 +35,11 @@ class PlayerFragment : Fragment() {
     private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
 
-    private val playerViewModel: PlayerViewModel by viewModel()
+    private val viewModel: PlayerViewModel by viewModel()
 
-    private val args: PlayerFragmentArgs by navArgs()
+    private val navArgs: PlayerFragmentArgs by navArgs()
+
+    private var playlistTitle: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +48,7 @@ class PlayerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,21 +57,49 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupClickListeners()
-        setTrackInfo(args.track)
+        setTrackInfo(navArgs.track)
+        getFragmentResult()
 
-        playerViewModel.state.observe(viewLifecycleOwner) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiEvents.collect { event ->
+                when(event) {
+                    PlayerUiEvents.ShowTrackAlreadyExistsMessage -> {
+                        showSnackBar(
+                            view = binding.root,
+                            message = getString(R.string.trackAlreadyExistsMessage, playlistTitle)
+                        )
+                    }
+                    PlayerUiEvents.ShowTrackSuccessAddedMessage -> {
+                        showSnackBar(
+                            view = binding.root,
+                            message = getString(R.string.trackSuccessAddedMessage, playlistTitle)
+                        )
+                    }
+                }
+            }
+        }
+
+        viewModel.state.observe(viewLifecycleOwner) {
             render(it)
         }
     }
 
     override fun onStop() {
         super.onStop()
-        playerViewModel.onIntent(PlayerIntent.Pause)
+        viewModel.onIntent(PlayerIntent.Pause)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun getFragmentResult() {
+        setFragmentResultListener(AddTrackBottomSheetFragment.FRAGMENT_RESULT_KEY) { _, bundle ->
+            playlistTitle = bundle.getString(AddTrackBottomSheetFragment.PLAYLIST_TITLE_KEY)
+            val playlistId = bundle.getInt(AddTrackBottomSheetFragment.PLAYLIST_ID_KEY)
+            viewModel.onIntent(PlayerIntent.AddTrackToPlaylist(navArgs.track, playlistId))
+        }
     }
 
     private fun setTrackTime(time: Int) {
@@ -80,6 +116,12 @@ class PlayerFragment : Fragment() {
             binding.addToFavBtn.setImageResource(R.drawable.ic_add_to_fav_btn_51)
         }
 
+        if (state.inPlaylist) {
+            binding.addToPlaylistBtn.setImageResource(R.drawable.ic_in_playlist_51)
+        } else {
+            binding.addToPlaylistBtn.setImageResource(R.drawable.ic_add_to_playlist_btn_51)
+        }
+
         if (state.isPlaying) {
             binding.playBtn.visibility = View.GONE
             binding.pauseBtn.visibility = View.VISIBLE
@@ -91,9 +133,8 @@ class PlayerFragment : Fragment() {
 
 
     private fun setTrackInfo(track: Track?) {
-        Log.d("track", track.toString())
         if (track != null) {
-            playerViewModel.onIntent(PlayerIntent.LoadTrack(url = track.previewUrl, id = track.trackId))
+            viewModel.onIntent(PlayerIntent.LoadTrack(url = track.previewUrl, id = track.trackId))
             setImage(track.artworkUrl100, binding.trackArtwork)
             binding.trackName.text = track.trackName
             binding.artistName.text = track.artistName
@@ -111,7 +152,7 @@ class PlayerFragment : Fragment() {
         Glide.with(this)
             .load(uri.replaceAfterLast("/", "512x512bb.jpg"))
             .centerCrop()
-            .transform(RoundedCorners(DimensionsUtils.Companion.dpToPixel(8f, requireContext())))
+            .transform(RoundedCorners(DimensionsUtils.dpToPixel(8f, requireContext())))
             .placeholder(R.drawable.ic_placeholder_312)
             .into(view)
     }
@@ -127,19 +168,45 @@ class PlayerFragment : Fragment() {
             onPauseBtnClick()
         }
         binding.addToFavBtn.setOnClickListener {
-            onFavBtnClick(args.track)
+            onFavBtnClick(navArgs.track)
+        }
+        binding.addToPlaylistBtn.setOnClickListener {
+            onAddToPlaylistClick(navArgs.track)
         }
     }
 
+    private fun showSnackBar(message: String, view: View) {
+        val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_SHORT)
+
+        val customSnackbar = layoutInflater.inflate(R.layout.custom_snackbar, null)
+        snackbar.view.setBackgroundColor(Color.TRANSPARENT)
+        val layout = snackbar.view as ViewGroup
+
+        val text = customSnackbar.findViewById<TextView>(R.id.snackbar_message)
+        text.text = message
+
+        layout.setPadding(0, 0, 0, 0)
+        layout.addView(customSnackbar)
+        snackbar.show()
+    }
+
+
     private fun onPlayBtnClick() {
-        playerViewModel.onIntent(PlayerIntent.Play)
+        viewModel.onIntent(PlayerIntent.Play)
     }
 
     private fun onPauseBtnClick() {
-        playerViewModel.onIntent(PlayerIntent.Pause)
+        viewModel.onIntent(PlayerIntent.Pause)
     }
 
     private fun onFavBtnClick(track: Track) {
-        playerViewModel.onIntent(PlayerIntent.FavBtnClick(track))
+        viewModel.onIntent(PlayerIntent.FavBtnClick(track))
+    }
+
+    private fun onAddToPlaylistClick(track: Track) {
+        val action = PlayerFragmentDirections.actionPlayerFragmentToAddTrackBottomSheetFragment(
+            track
+        )
+        findNavController().navigate(action)
     }
 }

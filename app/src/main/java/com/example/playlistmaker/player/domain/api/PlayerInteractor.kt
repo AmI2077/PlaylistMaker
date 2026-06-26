@@ -6,6 +6,8 @@ interface PlayerInteractor {
 
     suspend fun getTrack(id: String): Boolean
 
+    suspend fun getPlaylist(trackId: String): List<Int>
+
     suspend fun addTrackToFav(track: Track)
 
     suspend fun deleteTrackFromFav(id: String)

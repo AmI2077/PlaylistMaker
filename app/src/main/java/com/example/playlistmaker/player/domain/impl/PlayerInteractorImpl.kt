@@ -11,6 +11,10 @@ class PlayerInteractorImpl(
         return playerRepository.getTrack(id) != null
     }
 
+    override suspend fun getPlaylist(trackId: String): List<Int> {
+        return playerRepository.getPlaylist(trackId)
+    }
+
     override suspend fun addTrackToFav(track: Track) {
         playerRepository.addTrackToFav(track)
     }

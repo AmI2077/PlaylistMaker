@@ -38,6 +38,15 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
+                R.id.addTrackBottomSheetFragment -> {
+                    binding.bottomNavView.visibility = View.GONE
+                }
+                R.id.addPlaylistFragment -> {
+                    binding.bottomNavView.visibility = View.GONE
+                }
+                R.id.playlistDetailsFragment -> {
+                    binding.bottomNavView.visibility = View.GONE
+                }
                 R.id.playerFragment -> {
                     binding.bottomNavView.menu.findItem(R.id.searchFragment).isChecked = true
                     binding.bottomNavView.visibility = View.GONE

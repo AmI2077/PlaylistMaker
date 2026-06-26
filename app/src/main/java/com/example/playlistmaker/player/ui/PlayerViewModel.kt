@@ -4,11 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
 import com.example.playlistmaker.player.domain.api.AudioPlayer
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
@@ -17,11 +20,15 @@ private const val TIMER_DELAY = 300L
 class PlayerViewModel(
     private val audioPlayer: AudioPlayer,
     private val playerInteractor: PlayerInteractor,
+    private val playlistInteractor: PlaylistsInteractor
 ): ViewModel() {
 
     private var timerJob: Job? = null
 
     private var trackId: String = ""
+
+    private var _uiEvents = MutableSharedFlow<PlayerUiEvents>()
+    val uiEvents = _uiEvents.asSharedFlow()
 
     private var _state = MutableLiveData<PlayerUiState>()
     val state: LiveData<PlayerUiState> = _state
@@ -47,6 +54,17 @@ class PlayerViewModel(
             is PlayerIntent.FavBtnClick -> {
                 onFavClick(intent.track)
             }
+
+            is PlayerIntent.AddTrackToPlaylist -> {
+                viewModelScope.launch {
+                    if (trackInPlaylist(intent.track.trackId, intent.playlistId)) {
+                        _uiEvents.emit(PlayerUiEvents.ShowTrackAlreadyExistsMessage)
+                    } else {
+                        addTrackToPlaylist(intent.track, intent.playlistId)
+                        _uiEvents.emit(PlayerUiEvents.ShowTrackSuccessAddedMessage)
+                    }
+                }
+            }
         }
     }
 
@@ -54,10 +72,12 @@ class PlayerViewModel(
         timerJob?.cancel()
         viewModelScope.launch {
             val isLiked = playerInteractor.getTrack(trackId)
+            val inPlaylist = playerInteractor.getPlaylist(trackId).isNotEmpty()
             updatePlayerUiState(
                 isPlaying = false,
                 playTime = 0,
-                isLiked = isLiked
+                isLiked = isLiked,
+                inPlaylist = inPlaylist
             )
         }
     }
@@ -99,16 +119,30 @@ class PlayerViewModel(
         }
     }
 
+    private suspend fun addTrackToPlaylist(track: Track, playlistId: Int) {
+        playlistInteractor.addTrackIntoPlaylist(playlistId, track)
+        val currentState = _state.value ?: PlayerUiState()
+        _state.value = currentState.copy(
+            inPlaylist = true
+        )
+    }
+
+    private suspend fun trackInPlaylist(trackId: String, playlistId: Int): Boolean {
+        return playerInteractor.getPlaylist(trackId).contains(playlistId)
+    }
+
     private fun updatePlayerUiState(
         isPlaying: Boolean,
         playTime: Int,
-        isLiked: Boolean? = null
+        isLiked: Boolean? = null,
+        inPlaylist: Boolean? = null
     ) {
         val currentState = _state.value ?: PlayerUiState()
         _state.value = currentState.copy(
             isPlaying = isPlaying,
             playTime = playTime,
-            isLiked = isLiked ?: currentState.isLiked
+            isLiked = isLiked ?: currentState.isLiked,
+            inPlaylist = inPlaylist ?: currentState.inPlaylist
         )
     }
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    tools:context=".library.ui.fragments.FavouriteTracksFragment">
+    tools:context=".library.ui.favtracks.FavouriteTracksFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favouriteTracksRecycler"
