@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -42,11 +43,11 @@ class PlaylistsFragment : Fragment() {
     private fun render(state: PlaylistsUiState) {
         if (!state.playlists.isEmpty()) {
             playlistsAdapter.submitList(state.playlists)
-            binding.emptyErrorView.visibility = View.GONE
-            binding.playlistsRecycler.visibility = View.VISIBLE
+            binding.emptyErrorView.isVisible = false
+            binding.playlistsRecycler.isVisible = true
         } else {
-            binding.playlistsRecycler.visibility = View.GONE
-            binding.emptyErrorView.visibility = View.VISIBLE
+            binding.playlistsRecycler.isVisible = false
+            binding.emptyErrorView.isVisible = true
         }
     }
 

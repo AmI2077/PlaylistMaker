@@ -130,7 +130,7 @@ class AddPlaylistFragment : Fragment() {
 
     private fun onCreatePlaylistClick() {
         viewModel.addPlaylist(
-            title = binding.titleEditText.text.toString(),
+            title = binding.titleEditText.text?.trim().toString(),
             description = binding.descriptionEditText.text.toString(),
             imagePath = imagePath,
             nowYear = LocalDate.now().year.toString()
@@ -141,7 +141,7 @@ class AddPlaylistFragment : Fragment() {
 
     private fun setTextWatcher() {
         binding.titleEditText.doOnTextChanged { text, _, _, _ ->
-            binding.createPlaylistBtn.isEnabled = text?.isEmpty() != true
+            binding.createPlaylistBtn.isEnabled = text?.isBlank() != true
         }
     }
 

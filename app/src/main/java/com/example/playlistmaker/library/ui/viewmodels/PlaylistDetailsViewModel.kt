@@ -19,12 +19,8 @@ class PlaylistDetailsViewModel(
     fun onIntent(intent: PlaylistDetailsIntent) {
         when(intent) {
             is PlaylistDetailsIntent.LoadDetails -> getDetails(intent.playlistId)
-            PlaylistDetailsIntent.OpenMenuBottomSheet -> {
-
-            }
-            is PlaylistDetailsIntent.DeletePlaylist -> {
-
-            }
+            PlaylistDetailsIntent.OpenMenuBottomSheet -> Unit
+            is PlaylistDetailsIntent.DeletePlaylist -> Unit
         }
     }
 
