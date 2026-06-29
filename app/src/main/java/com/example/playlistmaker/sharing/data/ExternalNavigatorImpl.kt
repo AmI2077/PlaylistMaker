@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.net.toUri
+import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.sharing.domain.interfaces.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.interfaces.ResourceClient
 
@@ -43,6 +44,14 @@ class ExternalNavigatorImpl(
         val url = resourceClient.getTermsUrl()
         val termsIntent = Intent(Intent.ACTION_VIEW, url.toUri()).addActivityFlag()
         context.startActivity(termsIntent)
+    }
+
+    override fun sharePlaylist(playlist: Playlist) {
+        val text = resourceClient.getPlaylistTextData(playlist)
+
+        val intent = Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT, text)
+        intent.type = "text/plain"
+        context.startActivity(Intent.createChooser(intent, null).addActivityFlag())
     }
 }
 

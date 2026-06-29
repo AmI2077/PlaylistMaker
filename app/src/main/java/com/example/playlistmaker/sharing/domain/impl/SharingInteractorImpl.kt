@@ -1,5 +1,6 @@
 package com.example.playlistmaker.sharing.domain.impl
 
+import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.sharing.domain.interfaces.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.interfaces.SharingInteractor
 
@@ -16,5 +17,9 @@ class SharingInteractorImpl(
 
     override fun openTerms() {
         externalNavigator.openTerms()
+    }
+
+    override fun sharePlaylist(playlist: Playlist) {
+        externalNavigator.sharePlaylist(playlist)
     }
 }

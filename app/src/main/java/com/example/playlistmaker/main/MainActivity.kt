@@ -38,6 +38,9 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
+                R.id.playlistBottomSheetFragment -> {
+                    binding.bottomNavView.visibility = View.GONE
+                }
                 R.id.addTrackBottomSheetFragment -> {
                     binding.bottomNavView.visibility = View.GONE
                 }

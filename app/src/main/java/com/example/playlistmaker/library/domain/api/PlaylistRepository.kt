@@ -12,7 +12,11 @@ interface PlaylistRepository {
 
     suspend fun deletePlaylist(playlistId: Int)
 
+    suspend fun deleteTrackFromPlaylist(playlistId: Int, trackId: String)
+
     suspend fun addPlaylist(playlist: Playlist)
+
+    suspend fun updatePlaylist(playlist: Playlist)
 
     suspend fun addTrackIntoPlaylist(playlistId: Int, track: Track)
 }

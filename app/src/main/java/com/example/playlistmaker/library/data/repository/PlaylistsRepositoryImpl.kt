@@ -56,10 +56,23 @@ class PlaylistsRepositoryImpl(
         playlistDao.deletePlaylist(playlistId)
     }
 
+    override suspend fun deleteTrackFromPlaylist(playlistId: Int, trackId: String) {
+        playlistTrackDao.deleteTrackFromPlaylist(
+            PlaylistTrackCrossRef(
+                trackId = trackId,
+                playlistId = playlistId
+            )
+        )
+    }
+
     override suspend fun addPlaylist(playlist: Playlist) {
         withContext(Dispatchers.IO) {
             playlistDao.insertPlaylist(playlist.toEntity())
         }
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        playlistDao.updatePlaylist(playlist.toEntity())
     }
 
     override suspend fun addTrackIntoPlaylist(playlistId: Int, track: Track) {

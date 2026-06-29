@@ -12,7 +12,11 @@ interface PlaylistsInteractor {
 
     suspend fun addPlaylist(playlist: Playlist)
 
+    suspend fun updatePlaylist(playlist: Playlist)
+
     suspend fun deletePlaylist(playlistId: Int)
+
+    suspend fun deleteTrackFromPlaylist(playlistId: Int, trackId: String)
 
     suspend fun addTrackIntoPlaylist(playlistId: Int, track: Track)
 }
