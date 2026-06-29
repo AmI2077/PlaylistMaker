@@ -1,10 +1,10 @@
-package com.example.playlistmaker.library.ui.fragments
+package com.example.playlistmaker.library.ui.favtracks
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.FragmentFavouriteTracksBinding
@@ -27,7 +27,7 @@ class FavouriteTracksFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFavouriteTracksBinding.inflate(inflater, container, false)
         setupAdapter()
 
@@ -57,7 +57,8 @@ class FavouriteTracksFragment : Fragment() {
 
         binding.favouriteTracksRecycler.adapter = favTracksAdapter
         binding.favouriteTracksRecycler.layoutManager = LinearLayoutManager(
-            requireContext(), LinearLayoutManager.VERTICAL, false)
+            requireContext(), LinearLayoutManager.VERTICAL, false
+        )
     }
 
     private fun onTrackClick(track: Track) {

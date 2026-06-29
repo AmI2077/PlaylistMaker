@@ -6,6 +6,8 @@ interface PlayerRepository {
 
     suspend fun getTrack(id: String): Track?
 
+    suspend fun getPlaylist(trackId: String): List<Int>
+
     suspend fun addTrackToFav(track: Track)
 
     suspend fun deleteTrackFromFav(id: String)

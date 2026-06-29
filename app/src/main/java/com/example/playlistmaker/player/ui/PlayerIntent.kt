@@ -7,4 +7,5 @@ sealed interface PlayerIntent {
     object Play: PlayerIntent
     object Pause: PlayerIntent
     data class FavBtnClick(val track: Track): PlayerIntent
+    data class AddTrackToPlaylist(val track: Track, val playlistId: Int): PlayerIntent
 }

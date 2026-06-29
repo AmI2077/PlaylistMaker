@@ -22,6 +22,12 @@
         <action
             android:id="@+id/action_libraryFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_addPlaylistFragment"
+            app:destination="@id/addPlaylistFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_playlistDetailsFragment"
+            app:destination="@id/playlistDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -36,5 +42,49 @@
         <argument
             android:name="track"
             app:argType="com.example.playlistmaker.search.domain.models.Track" />
+        <action
+            android:id="@+id/action_playerFragment_to_addTrackBottomSheetFragment"
+            app:destination="@id/addTrackBottomSheetFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addPlaylistFragment"
+        android:name="com.example.playlistmaker.library.ui.addplaylist.AddPlaylistFragment"
+        android:label="fragment_add_playlist"
+        tools:layout="@layout/fragment_add_playlist" />
+    <fragment
+        android:id="@+id/playlistDetailsFragment"
+        android:name="com.example.playlistmaker.library.ui.playlistdetails.PlaylistDetailsFragment"
+        android:label="fragment_playlist_details"
+        tools:layout="@layout/fragment_playlist_details" >
+        <argument
+            android:name="playlistId"
+            app:argType="integer"/>
+        <action
+            android:id="@+id/action_playlistDetailsFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_playlistDetailsFragment_to_playlistBottomSheetFragment"
+            app:destination="@id/playlistBottomSheetFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/addTrackBottomSheetFragment"
+        android:name="com.example.playlistmaker.player.ui.addtoplaylist.AddTrackBottomSheetFragment"
+        android:label="fragment_add_track_bottom_sheet"
+        tools:layout="@layout/fragment_add_track_bottom_sheet" >
+        <argument
+            android:name="track"
+            app:argType="com.example.playlistmaker.search.domain.models.Track" />
+        <action
+            android:id="@+id/action_addTrackBottomSheetFragment_to_addPlaylistFragment"
+            app:destination="@id/addPlaylistFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/playlistBottomSheetFragment"
+        android:name="com.example.playlistmaker.library.ui.playlistdetails.bottomsheetdialog.PlaylistBottomSheetFragment"
+        android:label="fragment_playlist_bottom_sheet"
+        tools:layout="@layout/fragment_playlist_bottom_sheet" >
+        <argument
+            android:name="playlistId"
+            app:argType="integer"/>
     </fragment>
 </navigation>

@@ -7,6 +7,14 @@
         <item name="android:letterSpacing">0</item>
     </style>
 
+    <style name="playlistHeaderTextStyle">
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="fontWeight">700</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
     <style name="mainMenuBtnStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="backgroundTint">@color/white</item>
         <item name="cornerRadius">16dp</item>
@@ -50,6 +58,10 @@
 
     <style name="regularTextStyle.13">
         <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="regularTextStyle.12">
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="trackInfoTextStyle" parent="regularTextStyle.13">

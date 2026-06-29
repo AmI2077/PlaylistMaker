@@ -13,6 +13,24 @@
     <string name="forward">Вперед</string>
     <string name="artWork">Обложка трека</string>
 
+    <string name="sharePlaylist">Поделиться</string>
+    <string name="editPlaylist">Редактировать информацию</string>
+    <string name="deletePlaylist">Удалить плейлист</string>
+    <string name="deletePlaylistMessage">Хотите удалить плейлист?</string>
+
+    <string name="completePlaylistAdding">Завершить создание плейлиста?</string>
+    <string name="lostAllData">Все несохраненные данные будут потеряны</string>
+
+    <string name="cancellation">Отмена</string>
+    <string name="complete">Завершить</string>
+
+    <string name="titleEditTextHint">Название*</string>
+    <string name="descriptionEditTextHint">Описание</string>
+
+    <string name="permissionDialogMessage">Разрешить приложению «Playlist Maker» доступ к фото?</string>
+    <string name="permissionNegativeBtn">Нет</string>
+    <string name="permissionPositiveBtn">Да</string>
+
     <string name="fav_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>
     <string name="empty_library">Ваша медиатека пуста</string>
@@ -39,4 +57,24 @@
     <string name="genre_text">Жанр</string>
     <string name="year_text">Год</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_playlist">Создать</string>
+
+
+    <plurals name="tracksCountInPlaylist">
+        <item quantity="one">%d трек</item>
+        <item quantity="few">%d трека</item>
+        <item quantity="many">%d треков</item>
+        <item quantity="other">%d треков</item>
+    </plurals>
+
+    <plurals name="tracksTotalTimeInPlaylist">
+        <item quantity="one">%d минута</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минут</item>
+    </plurals>
+
+    <string name="playlistCreatedMessage">Плейлист %1$s создан</string>
+    <string name="trackAlreadyExistsMessage">Трек уже добавлен в плейлист %1$s</string>
+    <string name="trackSuccessAddedMessage">Добавлено в плейлист %1$s</string>
 </resources>

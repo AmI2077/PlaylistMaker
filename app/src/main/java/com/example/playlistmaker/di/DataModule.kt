@@ -3,7 +3,9 @@ package com.example.playlistmaker.di
 import android.content.Context
 import android.media.MediaPlayer
 import com.example.playlistmaker.library.data.db.AppDatabase
-import com.example.playlistmaker.library.data.db.dao.TracksDao
+import com.example.playlistmaker.library.data.db.dao.PlaylistDao
+import com.example.playlistmaker.library.data.db.dao.PlaylistTrackDao
+import com.example.playlistmaker.library.data.db.dao.FavouriteTrackDao
 import com.example.playlistmaker.player.data.AudioPlayerImpl
 import com.example.playlistmaker.player.domain.api.AudioPlayer
 import com.example.playlistmaker.search.data.local.PrefsStorageClient
@@ -23,7 +25,15 @@ val dataModule = module {
 
     single {
         AppDatabase.getDatabase(androidContext()).getTracksDao()
-    } bind TracksDao::class
+    } bind FavouriteTrackDao::class
+
+    single {
+        AppDatabase.getDatabase(androidContext()).getPlaylistsDao()
+    } bind PlaylistDao::class
+
+    single {
+        AppDatabase.getDatabase(androidContext()).getTrackPlaylistDao()
+    } bind PlaylistTrackDao::class
 
     single {
         RetrofitClient

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="312dp"
+        android:height="312dp"
+        android:drawable="@drawable/photo_load_stroke"/>
+    <item
+        android:width="100dp"
+        android:height="100dp"
+        android:gravity="center"
+        android:drawable="@drawable/ic_add_photo_100"/>
+</layer-list>
