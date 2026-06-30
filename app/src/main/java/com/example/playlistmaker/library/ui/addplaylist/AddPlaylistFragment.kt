@@ -81,17 +81,18 @@ class AddPlaylistFragment : Fragment() {
 
         viewModel.playlist.observe(viewLifecycleOwner) {
             val radius = DimensionsUtils.dpToPixel(8f, binding.root.context)
-            binding.titleEditText.setText(it.title)
-            binding.descriptionEditText.setText(it.description)
-            binding.headerTitle.text = getString(R.string.edit)
-            binding.createPlaylistBtn.text = getString(R.string.save)
-            imagePath = it.artworkUri
-            Glide.with(requireContext())
-                .load(it.artworkUri)
-                .transform(CenterCrop(), RoundedCorners(radius))
-                .into(binding.loadImageView)
+            with(binding) {
+                titleEditText.setText(it.title)
+                descriptionEditText.setText(it.description)
+                headerTitle.text = getString(R.string.edit)
+                createPlaylistBtn.text = getString(R.string.save)
+                imagePath = it.artworkUri
+                Glide.with(requireContext())
+                    .load(it.artworkUri)
+                    .transform(CenterCrop(), RoundedCorners(radius))
+                    .into(binding.loadImageView)
+            }
         }
-
         setTextWatcher()
         setupClickListeners()
         return binding.root
@@ -106,16 +107,17 @@ class AddPlaylistFragment : Fragment() {
             viewModel.getPlaylistDetails(navArgs.playlistId)
         }
 
+
         val onCloseFragmentCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleCloseFragment()
             }
         }
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             onCloseFragmentCallback
         )
+
     }
 
     private fun loadImage(uri: Uri?) {
@@ -218,11 +220,15 @@ class AddPlaylistFragment : Fragment() {
     }
 
     private fun handleCloseFragment() {
-        if (!binding.titleEditText.text.isNullOrEmpty()
-            || !binding.descriptionEditText.text.isNullOrEmpty()
-            || binding.loadImageView.drawable != null) {
+        if (!isEditMode) {
+            if (!binding.titleEditText.text.isNullOrEmpty()
+                || !binding.descriptionEditText.text.isNullOrEmpty()
+                || binding.loadImageView.drawable != null) {
 
-            showCloseFragmentDialog()
+                showCloseFragmentDialog()
+            } else {
+                closeFragment()
+            }
         } else {
             closeFragment()
         }
