@@ -19,11 +19,13 @@ import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
+import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.library.ui.viewmodels.AddPlaylistViewModel
 import com.example.playlistmaker.utils.DimensionsUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -33,6 +35,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.time.LocalDate
 import java.util.Locale
+import kotlin.getValue
+import kotlin.properties.Delegates
 import kotlin.random.Random
 
 class AddPlaylistFragment : Fragment() {
@@ -41,7 +45,11 @@ class AddPlaylistFragment : Fragment() {
 
     private var imagePath: String? = null
 
+    private val navArgs: AddPlaylistFragmentArgs by navArgs()
+
     private val viewModel: AddPlaylistViewModel by viewModel()
+
+    private var isEditMode = false
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private val requestPermissions = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -54,11 +62,7 @@ class AddPlaylistFragment : Fragment() {
 
     private val photoPicker = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            val radius = DimensionsUtils.dpToPixel(8f, binding.root.context)
-            Glide.with(requireContext())
-                .load(uri)
-                .transform(CenterCrop(), RoundedCorners(radius))
-                .into(binding.loadImageView)
+            loadImage(uri)
             imagePath = saveImageToStorage(uri)
         }
     }
@@ -75,6 +79,20 @@ class AddPlaylistFragment : Fragment() {
         _binding = FragmentAddPlaylistBinding.inflate(inflater, container, false)
 
 
+        viewModel.playlist.observe(viewLifecycleOwner) {
+            val radius = DimensionsUtils.dpToPixel(8f, binding.root.context)
+            with(binding) {
+                titleEditText.setText(it.title)
+                descriptionEditText.setText(it.description)
+                headerTitle.text = getString(R.string.edit)
+                createPlaylistBtn.text = getString(R.string.save)
+                imagePath = it.artworkUri
+                Glide.with(requireContext())
+                    .load(it.artworkUri)
+                    .transform(CenterCrop(), RoundedCorners(radius))
+                    .into(binding.loadImageView)
+            }
+        }
         setTextWatcher()
         setupClickListeners()
         return binding.root
@@ -83,18 +101,32 @@ class AddPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        isEditMode = navArgs.playlistId != -1
+
+        if (isEditMode) {
+            viewModel.getPlaylistDetails(navArgs.playlistId)
+        }
+
+
         val onCloseFragmentCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleCloseFragment()
             }
         }
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             onCloseFragmentCallback
         )
+
     }
 
+    private fun loadImage(uri: Uri?) {
+        val radius = DimensionsUtils.dpToPixel(8f, binding.root.context)
+        Glide.with(requireContext())
+            .load(uri)
+            .transform(CenterCrop(), RoundedCorners(radius))
+            .into(binding.loadImageView)
+    }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun setupClickListeners() {
@@ -129,14 +161,24 @@ class AddPlaylistFragment : Fragment() {
     }
 
     private fun onCreatePlaylistClick() {
-        viewModel.addPlaylist(
-            title = binding.titleEditText.text?.trim().toString(),
-            description = binding.descriptionEditText.text.toString(),
-            imagePath = imagePath,
-            nowYear = LocalDate.now().year.toString()
-        )
-        closeFragment()
-
+        if (isEditMode) {
+            viewModel.updatePlaylist(
+                id = navArgs.playlistId,
+                title = binding.titleEditText.text?.trim().toString(),
+                description = binding.descriptionEditText.text.toString(),
+                imagePath = imagePath,
+                nowYear = LocalDate.now().year.toString()
+            )
+            closeFragment()
+        } else {
+            viewModel.addPlaylist(
+                title = binding.titleEditText.text?.trim().toString(),
+                description = binding.descriptionEditText.text.toString(),
+                imagePath = imagePath,
+                nowYear = LocalDate.now().year.toString()
+            )
+            closeFragment()
+        }
     }
 
     private fun setTextWatcher() {
@@ -178,11 +220,15 @@ class AddPlaylistFragment : Fragment() {
     }
 
     private fun handleCloseFragment() {
-        if (!binding.titleEditText.text.isNullOrEmpty()
-            || !binding.descriptionEditText.text.isNullOrEmpty()
-            || binding.loadImageView.drawable != null) {
+        if (!isEditMode) {
+            if (!binding.titleEditText.text.isNullOrEmpty()
+                || !binding.descriptionEditText.text.isNullOrEmpty()
+                || binding.loadImageView.drawable != null) {
 
-            showCloseFragmentDialog()
+                showCloseFragmentDialog()
+            } else {
+                closeFragment()
+            }
         } else {
             closeFragment()
         }

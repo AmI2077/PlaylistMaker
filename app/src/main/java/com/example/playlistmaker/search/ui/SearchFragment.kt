@@ -140,12 +140,12 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        searchTracksAdapter = TracksAdapter { track -> onTrackClick(track) }
+        searchTracksAdapter = TracksAdapter( { track -> onTrackClick(track) } )
         binding.tracksRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.tracksRecycler.adapter = searchTracksAdapter
 
-        historyTracksAdapter = TracksAdapter { track -> onTrackClick(track) }
+        historyTracksAdapter = TracksAdapter({ track -> onTrackClick(track) } )
         binding.historySearchRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.historySearchRecycler.adapter = historyTracksAdapter

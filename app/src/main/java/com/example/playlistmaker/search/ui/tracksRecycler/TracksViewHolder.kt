@@ -23,9 +23,19 @@ class TracksViewHolder(
     val trackArtView: ImageView = itemView.findViewById<ImageView>(R.id.track_artwork)
 
 
-    fun bind(model: Track, onItemClick: (track: Track) -> Unit) {
+    fun bind(
+        model: Track,
+        onItemClick: (track: Track) -> Unit,
+        onLongItemClick: ((track: Track) -> Unit)? = null,
+    ) {
         itemView.setOnClickListener {
             onItemClick(model)
+        }
+        if (onLongItemClick != null) {
+            itemView.setOnLongClickListener {
+                onLongItemClick(model)
+                true
+            }
         }
         trackNameView.text = model.trackName
         artistNameView.text = model.artistName

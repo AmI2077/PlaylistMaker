@@ -1,6 +1,7 @@
 package com.example.playlistmaker.library.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.ABORT
 import androidx.room.OnConflictStrategy.Companion.REPLACE
@@ -28,4 +29,7 @@ interface PlaylistTrackDao {
     suspend fun insertTrackData(trackDataEntity: PlaylistTrackDataEntity)
     @Insert(onConflict = ABORT)
     suspend fun insertTrackIntoPlaylist(playlistTrackCrossRef: PlaylistTrackCrossRef)
+
+    @Delete
+    suspend fun deleteTrackFromPlaylist(playlistTrackCrossRef: PlaylistTrackCrossRef)
 }

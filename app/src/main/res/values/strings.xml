@@ -14,9 +14,13 @@
     <string name="artWork">Обложка трека</string>
 
     <string name="sharePlaylist">Поделиться</string>
+    <string name="shareTracksInPlaylist">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="editPlaylist">Редактировать информацию</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
     <string name="deletePlaylist">Удалить плейлист</string>
     <string name="deletePlaylistMessage">Хотите удалить плейлист?</string>
+    <string name="deleteTrackMessage">Хотите удалить трек?</string>
 
     <string name="completePlaylistAdding">Завершить создание плейлиста?</string>
     <string name="lostAllData">Все несохраненные данные будут потеряны</string>

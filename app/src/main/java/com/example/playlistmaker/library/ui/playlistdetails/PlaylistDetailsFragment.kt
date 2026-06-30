@@ -1,9 +1,12 @@
 package com.example.playlistmaker.library.ui.playlistdetails
 
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,6 +20,7 @@ import com.example.playlistmaker.library.ui.viewmodels.PlaylistDetailsViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.tracksRecycler.TracksAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -28,6 +32,8 @@ class PlaylistDetailsFragment : Fragment() {
     private val navArgs: PlaylistDetailsFragmentArgs by navArgs()
 
     private val viewModel: PlaylistDetailsViewModel by viewModel()
+
+    private var playlist: Playlist? = null
 
     private lateinit var tracksAdapter: TracksAdapter
 
@@ -42,6 +48,7 @@ class PlaylistDetailsFragment : Fragment() {
         _binding = FragmentPlaylistDetailsBinding.inflate(inflater, container, false)
         viewModel.onIntent(PlaylistDetailsIntent.LoadDetails(navArgs.playlistId))
         viewModel.state.observe(viewLifecycleOwner) {
+            playlist = it
             render(it)
         }
 
@@ -53,6 +60,20 @@ class PlaylistDetailsFragment : Fragment() {
     private fun setupClickListeners() {
         binding.backBtn.setOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.shareBtn.setOnClickListener {
+            if (playlist?.tracks?.isNotEmpty() == true) {
+                viewModel.onIntent(PlaylistDetailsIntent.SharePlaylist(playlist!!))
+            } else {
+                Toast.makeText(requireContext(),
+                    getString(R.string.shareTracksInPlaylist),
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.menuBtn.setOnClickListener {
+            val action = PlaylistDetailsFragmentDirections.
+            actionPlaylistDetailsFragmentToPlaylistBottomSheetFragment(playlist!!.id)
+            findNavController().navigate(action)
         }
     }
 
@@ -100,8 +121,29 @@ class PlaylistDetailsFragment : Fragment() {
             setupAdapter(tracks)
             val bottomSheet = binding.tracksBottomSheet
             val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
+    }
+
+    private fun showDeleteTrackDialog(track: Track) {
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setMessage(R.string.deleteTrackMessage)
+            .setNegativeButton(R.string.permissionNegativeBtn) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(R.string.permissionPositiveBtn) { dialog, _ ->
+                dialog.dismiss()
+                viewModel.onIntent(PlaylistDetailsIntent.DeleteTrack(
+                    navArgs.playlistId, track.trackId
+                ))
+            }.show()
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            resources.getColor(R.color.yp_blue)
+        )
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+            resources.getColor(R.color.yp_blue)
+        )
     }
 
     private fun setupAdapter(tracks: List<Track>) {
@@ -109,6 +151,9 @@ class PlaylistDetailsFragment : Fragment() {
             onItemClick = {
                 val action = PlaylistDetailsFragmentDirections.actionPlaylistDetailsFragmentToPlayerFragment(it)
                 findNavController().navigate(action)
+            },
+            onLongItemClick = {
+                showDeleteTrackDialog(it)
             }
         )
         binding.tracksRecycler.adapter = tracksAdapter

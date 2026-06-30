@@ -7,10 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
 import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.library.ui.playlistdetails.PlaylistDetailsIntent
+import com.example.playlistmaker.sharing.domain.interfaces.SharingInteractor
 import kotlinx.coroutines.launch
 
 class PlaylistDetailsViewModel(
-    private val playlistsInteractor: PlaylistsInteractor
+    private val playlistsInteractor: PlaylistsInteractor,
+    private val sharingInteractor: SharingInteractor
 ): ViewModel() {
     private var _state = MutableLiveData<Playlist>()
     val state: LiveData<Playlist> = _state
@@ -20,7 +22,21 @@ class PlaylistDetailsViewModel(
         when(intent) {
             is PlaylistDetailsIntent.LoadDetails -> getDetails(intent.playlistId)
             PlaylistDetailsIntent.OpenMenuBottomSheet -> Unit
-            is PlaylistDetailsIntent.DeletePlaylist -> Unit
+            is PlaylistDetailsIntent.DeletePlaylist -> {
+                deletePlaylist(playlistId = intent.playlistId)
+            }
+            is PlaylistDetailsIntent.DeleteTrack -> {
+                deleteTrackFromPlaylist(intent.trackId, intent.playlistId)
+            }
+            is PlaylistDetailsIntent.SharePlaylist -> {
+                sharingInteractor.sharePlaylist(intent.playlist)
+            }
+        }
+    }
+
+    private fun deleteTrackFromPlaylist(trackId: String, playlistId: Int) {
+        viewModelScope.launch {
+            playlistsInteractor.deleteTrackFromPlaylist(playlistId, trackId)
         }
     }
 
@@ -33,7 +49,9 @@ class PlaylistDetailsViewModel(
     private fun getDetails(playlistId: Int) {
         viewModelScope.launch {
             playlistsInteractor.getPlaylistDetails(playlistId).collect {
-                _state.value = it
+                _state.value = it.copy(
+                    tracks = it.tracks.asReversed()
+                )
             }
         }
     }

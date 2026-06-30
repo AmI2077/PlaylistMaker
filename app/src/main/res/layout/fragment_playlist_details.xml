@@ -136,12 +136,12 @@
     <LinearLayout
         android:id="@+id/tracksBottomSheet"
         android:layout_width="match_parent"
-        android:layout_height="266dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@drawable/bottom_sheet_shape"
-        app:behavior_hideable="true"
         android:gravity="center"
-        app:behavior_peekHeight="240dp"
+        app:behavior_peekHeight="266dp"
+        app:behavior_hideable="false"
         android:padding="16dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 

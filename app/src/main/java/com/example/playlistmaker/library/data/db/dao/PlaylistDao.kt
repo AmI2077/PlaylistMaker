@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
+import androidx.room.Update
 import com.example.playlistmaker.library.data.db.entities.PlaylistEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -20,4 +21,7 @@ interface PlaylistDao {
 
     @Query("DELETE FROM Playlist WHERE id = :playlistId")
     suspend fun deletePlaylist(playlistId: Int)
+
+    @Update
+    suspend fun updatePlaylist(playlist: PlaylistEntity)
 }
